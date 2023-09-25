@@ -54,7 +54,6 @@ import addingPropertiesEmpl from "./components/employeeRecords/addProp.js";
 let employeeRecords;
 
 employeeRecords: {
-
   let arrDataRange = [
     "1. 374. СПН 1/3!A2:J",
     "2. 374. СПН 2!A2:J",
@@ -90,7 +89,6 @@ employeeRecords: {
         return addingPropertiesEmpl(employeeRecords, aimObject);
       }
     );
-
 }
 
 /* questions */
@@ -101,7 +99,6 @@ import addPropQu from "./components/questions/addProp.js";
 let questions;
 
 questions: {
-
   let questionsRanges = [
     "СПН!C:F",
     // 'МОП!C:F',
@@ -124,12 +121,11 @@ questions: {
     .then((res) => {
       return addPropQu(res);
     });
-
 }
 
-/* calcRes */
+/* calcResult */
 
-import calculation from "./components/calculation.js";
+import calculation from "./components/calcResult/calculation.js";
 
 let calcResult;
 
@@ -141,4 +137,4 @@ calculation: {
   );
 }
 
-console.log(calcResult);
+console.dir(calcResult);
