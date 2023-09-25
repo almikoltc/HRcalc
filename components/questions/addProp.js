@@ -1,10 +1,9 @@
-module.exports = function (arr) {
+export default function (arr) {
 
   return arr.body.map(el => {
-    return Object.assign(el, newOptions[el['Показатель']])
-  })
+    return Object.assign(el, newOptions[el['Показатель']]);
+  });
 }
-
 
 let newOptions = { /* если null - фильт пропускает значение */
   'Численность, всего': {
@@ -451,4 +450,4 @@ let newOptions = { /* если null - фильт пропускает значе
   'Текучесть (общая) - 12 мес +, %, без гр.0': {
     value: 0
   }
-}
+};

@@ -1,8 +1,6 @@
-module.exports = async function (client, range) {
+import { google } from "googleapis";
 
-  const {
-    google
-  } = require("googleapis");
+export default async function (client, range) {
 
   const opt = {
     spreadsheetId: ["1G3WL-5uOUFZdxvRNFkh0N9kyG5rwIpRlFVTwKMVT1O4"],
