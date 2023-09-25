@@ -1,14 +1,5 @@
 export default async function objectsPlus(arr, obj) {
 
-  /* TODO Автоматически добавлять наименования расчетных значений в .head */
-  /* TODO Рассчитать дополнительные значения из json 'Статсу приоритет' и 'Группа 0' */
-
-  // let fs = require('fs');
-  // let logs = require('../../result.json');
-  // .filter(item => {
-  //     return item.operation == 'Статут(Активен/Уволен)';
-  // });
-
   let
     length = arr.body.length,
     progres = 0.00,

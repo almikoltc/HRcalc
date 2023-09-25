@@ -10,7 +10,7 @@ import keys from "./components/keys.json" assert { type: 'json' };
 
 let client;
 
-autorization: {
+client: {
   client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
     "https://www.googleapis.com/auth/spreadsheets",
   ]);
@@ -26,29 +26,32 @@ autorization: {
 
 /* aim */
 
+import getDataAim from './components/aimObject/data.js';
+import getAim from './components/aimObject/createAimObject.js';
+
 let aimObject;
 
-import getDataAim from './components/aimObj/data.js';
-import getAim from './components/aimObj/createAimObject.js';
-
-aim: {
-  aimObject = getDataAim(client, "СПН!A1:XX1").then((data) => {
-    return getAim({
-      year: 2023 /* Ввод */,
-      month: 9 /* Ввод */,
-      data: data /* Ввод */,
+aimObject: {
+  aimObject = getDataAim(client, "СПН!A1:XX1")
+    .then((data) => {
+      return getAim({
+        year: 2023 /* Ввод */,
+        month: 9 /* Ввод */,
+        data: data /* Ввод */,
+      });
+    })
+    .then((data) => {
+      return data;
     });
-  }).then((data) => {
-    return data;
-  });
 }
-/* employeeRecords */
 
-let employeeRecords;
+/* employeeRecords */
 
 import getDataEmpl from './components/employeeRecords/data.js';
 import formtDateEmpl from "./components/employeeRecords/formatData.js";
 import addingPropertiesEmpl from "./components/employeeRecords/addProp.js";
+
+let employeeRecords;
 
 employeeRecords: {
 
@@ -80,10 +83,62 @@ employeeRecords: {
     });
 
 
-  employeeRecords = await Promise.all([employeeRecords, aimObject]).then(
-    ([employeeRecords, aimObject]) => {
-      return addingPropertiesEmpl(employeeRecords, aimObject);
-    }
-  );
+  employeeRecords = /* await */ Promise
+    .all([employeeRecords, aimObject])
+    .then(
+      ([employeeRecords, aimObject]) => {
+        return addingPropertiesEmpl(employeeRecords, aimObject);
+      }
+    );
 
 }
+
+/* questions */
+
+import getDataQu from './components/questions/data.js';
+import addPropQu from "./components/questions/addProp.js";
+
+let questions;
+
+questions: {
+
+  let questionsRanges = [
+    "СПН!C:F",
+    // 'МОП!C:F',
+    // 'СОА!C:F',
+    // 'МОА!C:F',
+    // 'АУП!C:F',
+  ];
+
+  questions = /* await */ Promise
+    .all(
+      questionsRanges.map((questionRange) => {
+        return getDataQu(client, questionRange);
+      })
+    )
+    .then((res) => {
+      res = res.flat();
+      return tableToObject(res);
+      // return res
+    })
+    .then((res) => {
+      return addPropQu(res);
+    });
+
+}
+
+/* calcRes */
+
+import calculation from "./components/calculation.js";
+
+let calcResult;
+
+calculation: {
+  calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
+    ([aimObject, personalInfo, questions]) => {
+      return calculation(questions, personalInfo);
+    }
+  );
+}
+
+console.log(calcResult);
