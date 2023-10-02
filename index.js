@@ -26,7 +26,7 @@ client: {
 
 /* aim */
 
-import getDataAim from './components/aimObject/data.js';
+import getDataAim from './components/aimObject/getData.js';
 import getAim from './components/aimObject/createAimObject.js';
 
 let aimObject;
@@ -47,7 +47,7 @@ aimObject: {
 
 /* employeeRecords */
 
-import getDataEmpl from './components/employeeRecords/data.js';
+import getDataEmpl from './components/employeeRecords/getData.js';
 import formtDateEmpl from "./components/employeeRecords/formatData.js";
 import addingPropertiesEmpl from "./components/employeeRecords/addProp.js";
 
@@ -93,7 +93,7 @@ employeeRecords: {
 
 /* questions */
 
-import getDataQu from './components/questions/data.js';
+import getDataQu from './components/questions/getData.js';
 import addPropQu from "./components/questions/addProp.js";
 
 let questions;
