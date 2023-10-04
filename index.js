@@ -91,7 +91,6 @@ employeeRecords: {
     )
     .then(
       (res) => {
-
         uniqueCitisNames: {
 
           let thisIterationCities = [...new Set(res.body.map(item => { return item["Город"]; }))];
@@ -133,6 +132,7 @@ import addPropQu from "./components/questions/addProp.js";
 let questions;
 
 questions: {
+
   let questionsRanges = [
     "СПН!C:F",
     // 'МОП!C:F',
@@ -140,6 +140,8 @@ questions: {
     // 'МОА!C:F',
     // 'АУП!C:F',
   ];
+
+
 
   questions = Promise
     .all(
