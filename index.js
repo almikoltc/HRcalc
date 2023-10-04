@@ -50,7 +50,7 @@ aimObject: {
 import getDataEmpl from './components/employeeRecords/getData.js';
 import formtDateEmpl from "./components/employeeRecords/formatData.js";
 import addingPropertiesEmpl from "./components/employeeRecords/addProp.js";
-import getSheetNames from "./components/employeeRecords/getSheetsName.js";
+import getSheetNames from "./components/getSheetsName.js";
 
 let employeeRecords;
 
@@ -58,7 +58,7 @@ employeeRecords: {
   let sheetNames = await getSheetNames(client, "10V1MBl_gMi6oQGeWCY83TWXFcBoIa1Cl4pdpNNiYWyM");
 
   let arrDataRange = sheetNames.map(item => {
-    return item + '!A2:J';
+    return item + '!A2:Z';
   });
 
   employeeRecords = Promise

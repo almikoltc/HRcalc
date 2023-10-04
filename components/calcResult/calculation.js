@@ -26,8 +26,6 @@ export default function calculation(arrQuery, arrObjects) {
 
     calc: {
 
-      // if (i < 10) {
-
       let
         result = arrObjects.body;
       for (let key in elQ) {
@@ -35,7 +33,6 @@ export default function calculation(arrQuery, arrObjects) {
       }
       let res = result.length;
       return [res];
-      // }
 
     }
 
