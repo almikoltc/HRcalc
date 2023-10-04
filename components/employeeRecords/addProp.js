@@ -53,7 +53,7 @@ export default async function objectsPlus(arr, obj) {
       item["Стаж 6+"] = item['Стаж работы в месяцах'] > 6;
       item["Стаж 7-12"] = (item['Стаж работы в месяцах'] > 6 && item['Стаж работы в месяцах'] < 13);
       item["Стаж 12+"] = item['Стаж работы в месяцах'] > 12;
-      item["Группа месяца"] = obj.periodStart;
+      item["Группа месяца"] = monthGroup(item['Дата выхода на работу']);
 
       return item;
 
@@ -64,8 +64,8 @@ export default async function objectsPlus(arr, obj) {
 
 };
 
-function monthGroup() {
-
+function monthGroup(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1, 5, 0, 0, 0);
 }
 
 function hiredFail(leave, workDays) {
