@@ -57,22 +57,9 @@ let employeeRecords;
 employeeRecords: {
   let sheetNames = await getSheetNames(client, "10V1MBl_gMi6oQGeWCY83TWXFcBoIa1Cl4pdpNNiYWyM");
 
-
-
   let arrDataRange = sheetNames.map(item => {
     return item + '!A2:J';
   });
-
-  console.log(arrDataRange);
-
-  // [
-  //   "1. 374. СПН 1/3!A2:J",
-  //   "2. 374. СПН 2!A2:J",
-  //   '3. 374. МОП!A2:J',
-  //   '4. 374. СОА!A2:J',
-  //   '5. 374. МОА!A2:J',
-  //   '6. 374. АУП!A2:J'
-  // ];
 
   employeeRecords = Promise
     .all(
