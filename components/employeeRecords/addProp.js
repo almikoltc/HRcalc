@@ -65,6 +65,9 @@ export default async function objectsPlus(arr, obj) {
 };
 
 function monthGroup(date) {
+  if (!date || date === 'null') {
+    return "Ошибка: нет даты выхода на работу!";
+  }
   return new Date(date.getFullYear(), date.getMonth(), 1, 5, 0, 0, 0);
 }
 
