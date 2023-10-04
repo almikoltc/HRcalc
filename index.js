@@ -80,7 +80,7 @@ employeeRecords: {
     });
 
 
-  employeeRecords = /* await */ Promise
+  employeeRecords = Promise
     .all([employeeRecords, aimObject])
     .then(
       ([employeeRecords, aimObject]) => {
@@ -105,7 +105,7 @@ questions: {
     // 'АУП!C:F',
   ];
 
-  questions = /* await */ Promise
+  questions = Promise
     .all(
       questionsRanges.map((questionRange) => {
         return getDataQu(client, questionRange);
@@ -114,7 +114,6 @@ questions: {
     .then((res) => {
       res = res.flat();
       return tableToObject(res);
-      // return res
     })
     .then((res) => {
       return addPropQu(res);
