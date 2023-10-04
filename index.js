@@ -67,17 +67,23 @@ employeeRecords: {
         return getDataEmpl(client, dataRange);
       })
     )
-    .then((arr = [res1, res2, res3, res4, res5, res6]) => {
-      return arr.reduce((acc, item, iter, thatArr) => {
-        return acc.concat(item);
-      }, []);
-    })
-    .then((res) => {
-      return tableToObject(res);
-    })
-    .then((res) => {
-      return formtDateEmpl(res);
-    });
+    .then(
+      (arr = result.falt()) => {
+        return arr.reduce((acc, item, iter, thatArr) => {
+          return acc.concat(item);
+        }, []);
+      }
+    )
+    .then(
+      (res) => {
+        return tableToObject(res);
+      }
+    )
+    .then(
+      (res) => {
+        return formtDateEmpl(res);
+      }
+    );
 
 
   employeeRecords = Promise
