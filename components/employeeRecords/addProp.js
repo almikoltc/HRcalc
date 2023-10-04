@@ -8,7 +8,7 @@ export default async function objectsPlus(arr, obj) {
 
   head: {
     arr.head = arr.head.concat([
-      'Период расчета',
+      // 'Период расчета',
       'Стаж работы в месяцах',
       'Стаж работы в днях',
       'Был активен',
@@ -18,14 +18,7 @@ export default async function objectsPlus(arr, obj) {
       "Стаж 6+",
       "Стаж 7-12",
       "Стаж 12+",
-      // "Статут(Активен/Уволен)(лог)",
-      // "Рабочий статус(лог)",
-      // "Временно не работал с(лог)",
-      // "Временно не работал по(лог)",
-      // "Приоритетная учетная запись(лог)",
-      // "Тип должности(лог)",
-      // "Дата выхода на работу(лог)",
-      // "Дата увольнения(лог)"
+      "Группа месяца",
     ]);
   }
 
@@ -50,9 +43,7 @@ export default async function objectsPlus(arr, obj) {
         }
       }
 
-
-
-      item['Период расчета'] = obj.periodStart;
+      // item['Период расчета'] = obj.periodStart;
       item['Стаж работы в месяцах'] = dateDiffM(item['Дата выхода на работу'], item['Дата увольнения'], obj.monthEnd);
       item['Стаж работы в днях'] = dateDiffD(item['Дата выхода на работу'], item['Дата увольнения'], obj.monthEnd);
       item['Был активен'] = beActive(item['Дата выхода на работу'], item["Дата увольнения"], obj);
@@ -62,25 +53,7 @@ export default async function objectsPlus(arr, obj) {
       item["Стаж 6+"] = item['Стаж работы в месяцах'] > 6;
       item["Стаж 7-12"] = (item['Стаж работы в месяцах'] > 6 && item['Стаж работы в месяцах'] < 13);
       item["Стаж 12+"] = item['Стаж работы в месяцах'] > 12;
-
-      // let
-      //     logsLocal;
-      // loginfo: {
-      //     logsLocal = logs.filter(
-      //         (itemLogs, iter, thatArr) => {
-      //             return itemLogs.client == item["Код сотрудника"]
-      //         }
-      //     )
-      // }
-
-      // item["Статут(Активен/Уволен)(лог)"] = status(logsLocal, obj, item["Код сотрудника"]);
-      // item["Рабочий статус(лог)"] = workStatus(logsLocal, obj, item["Код сотрудника"]);
-      // item["Временно не работал с(лог)"] = workPauseFrom(logsLocal, obj, item["Код сотрудника"]);
-      // item["Временно не работал по(лог)"] = workPauseTo(logsLocal, obj, item["Код сотрудника"]);
-      // item["Приоритетная учетная запись(лог)"] = priorityAccount(logsLocal, obj, item["Код сотрудника"]);
-      // item["Тип должности(лог)"] = postType(logsLocal, obj, item["Код сотрудника"]);
-      // item["Дата выхода на работу(лог)"] = employmentDate(logsLocal, obj, item["Код сотрудника"]);
-      // item["Дата увольнения(лог)"] = leaveDate(logsLocal, obj, item["Код сотрудника"]);
+      item["Группа месяца"] = obj.periodStart;
 
       return item;
 
@@ -91,227 +64,8 @@ export default async function objectsPlus(arr, obj) {
 
 };
 
-function status(logs, obj, id) {
+function monthGroup() {
 
-  let res = logs
-    .filter(
-      (item, iter, thatArr) => {
-        return item.operation == 'Статут(Активен/Уволен)';
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return item.client == id;
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return new Date(item.time).getTime() < new Date(obj.periodEnd).getTime();
-      }
-    )
-    .slice(-1);
-
-  if (res.length > 0) {
-    return res[0].new;
-  }
-
-  return null;
-}
-
-function workStatus(logs, obj, id) {
-
-  let res = logs
-    .filter(
-      (item, iter, thatArr) => {
-        return item.operation == 'Рабочий статус';
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return item.client == id;
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return new Date(item.time).getTime() < new Date(obj.periodEnd).getTime();
-      }
-    )
-    .slice(-1);
-
-  if (res.length > 0) {
-    // console.log(res[0].new)
-    return res[0].new;
-  }
-
-  return null;
-}
-
-function workPauseFrom(logs, obj, id) {
-
-  let res = logs
-    .filter(
-      (item, iter, thatArr) => {
-        return item.operation == 'Временно не работал с';
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return item.client == id;
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return new Date(item.time).getTime() < new Date(obj.periodEnd).getTime();
-      }
-    )
-    .slice(-1);
-
-  if (res.length > 0) {
-    // console.log(res[0].new)
-    return res[0].new;
-  }
-
-  return null;
-}
-
-function workPauseTo(logs, obj, id) {
-
-  let res = logs
-    .filter(
-      (item, iter, thatArr) => {
-        return item.operation == 'Временно не работал по';
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return item.client == id;
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return new Date(item.time).getTime() < new Date(obj.periodEnd).getTime();
-      }
-    )
-    .slice(-1);
-
-  if (res.length > 0) {
-    // console.log(res[0].new)
-    return res[0].new;
-  }
-
-  return null;
-}
-
-function priorityAccount(logs, obj, id) {
-
-  let res = logs
-    .filter(
-      (item, iter, thatArr) => {
-        return item.operation == 'Приоритетная учетная запись';
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return item.client == id;
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return new Date(item.time).getTime() < new Date(obj.periodEnd).getTime();
-      }
-    )
-    .slice(-1);
-
-  if (res.length > 0) {
-    // console.log(res[0].new)
-    return res[0].new;
-  }
-
-  return null;
-}
-
-function postType(logs, obj, id) {
-
-  let res = logs
-    .filter(
-      (item, iter, thatArr) => {
-        return item.operation == 'Тип должности';
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return item.client == id;
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return new Date(item.time).getTime() < new Date(obj.periodEnd).getTime();
-      }
-    )
-    .slice(-1);
-
-  if (res.length > 0) {
-    // console.log(res[0].new)
-    return res[0].new;
-  }
-
-  return null;
-}
-
-function employmentDate(logs, obj, id) {
-
-  let res = logs
-    .filter(
-      (item, iter, thatArr) => {
-        return item.operation == 'Дата выхода на работу';
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return item.client == id;
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return new Date(item.time).getTime() < new Date(obj.periodEnd).getTime();
-      }
-    )
-    .slice(-1);
-
-  if (res.length > 0) {
-    // console.log(res[0].new)
-    return res[0].new;
-  }
-
-  return null;
-}
-
-function leaveDate(logs, obj, id) {
-
-  let res = logs
-    .filter(
-      (item, iter, thatArr) => {
-        return item.operation == 'Дата увольнения';
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return item.client == id;
-      }
-    )
-    .filter(
-      (item, iter, thatArr) => {
-        return new Date(item.time).getTime() < new Date(obj.periodEnd).getTime();
-      }
-    )
-    .slice(-1);
-
-  if (res.length > 0) {
-    // console.log(res[0].new)
-    return res[0].new;
-  }
-
-  return null;
 }
 
 function hiredFail(leave, workDays) {
