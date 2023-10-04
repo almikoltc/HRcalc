@@ -1,8 +1,17 @@
 console.log('app running');
 
+/* global import */
+
 import { google } from "googleapis";
+import fs from "fs";
 import objectToTable from './components/objectToTable.js';
 import tableToObject from './components/tableToObject.js';
+
+/* catalogs */
+
+import cities from "./components/catalogs/cities.json" assert { type: 'json' };
+import typesOfPosts from "./components/catalogs/typesOfPosts.json" assert { type: 'json' };
+import indictors from "./components/catalogs/indictors.json" assert { type: 'json' };
 
 /* autorization */
 
@@ -52,6 +61,7 @@ import formtDateEmpl from "./components/employeeRecords/formatData.js";
 import addingPropertiesEmpl from "./components/employeeRecords/addProp.js";
 import getSheetNames from "./components/getSheetsName.js";
 
+
 let employeeRecords;
 
 employeeRecords: {
@@ -81,10 +91,30 @@ employeeRecords: {
     )
     .then(
       (res) => {
+
+        uniqueCitisNames: {
+
+          let thisIterationCities = [...new Set(res.body.map(item => { return item["Город"]; }))];
+          let newCitiesName = [];
+
+          thisIterationCities.map(item => {
+            if (!cities.includes(item)) {
+              newCitiesName.push(item);
+              console.log(item);
+            }
+          });
+
+          if (newCitiesName.length > 0) {
+            fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify([...cities, ...newCitiesName]));
+            console.log('update cities list');
+          } else {
+            console.log('cities list not update');
+          }
+
+        }
         return formtDateEmpl(res);
       }
     );
-
 
   employeeRecords = Promise
     .all([employeeRecords, aimObject])
