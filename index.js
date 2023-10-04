@@ -111,6 +111,27 @@ employeeRecords: {
           }
 
         }
+        uniqueCitisAdress: {
+
+          let thisIterationCitiesAdress = [...new Set(res.body.map(item => { return item["Город"]; }))];
+          let newCitiesAdress = [];
+
+          thisIterationCities.map(item => {
+            if (!cities.includes(item)) {
+              newCitiesName.push(item);
+              console.log(item);
+            }
+          });
+
+          if (newCitiesName.length > 0) {
+            fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify([...cities, ...newCitiesName]));
+            // cities = [...cities, ...newCitiesName];
+            console.log('update cities list');
+          } else {
+            console.log('cities list not update');
+          }
+
+        }
         return formtDateEmpl(res);
       }
     );
@@ -132,6 +153,8 @@ import addPropQu from "./components/questions/addProp.js";
 let questions;
 
 questions: {
+
+
 
   let questionsRanges = [
     "СПН!C:F",
