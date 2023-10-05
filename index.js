@@ -162,6 +162,12 @@ import addPropQu from "./components/questions/addProp.js";
 
 let questions;
 
+// let quu = [];
+
+// citiesAndAddres.map(item => {
+//   item;
+// });
+
 questions: {
 
 
