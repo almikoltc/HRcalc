@@ -127,7 +127,7 @@ employeeRecords: {
             adr = [...new Set(adr)];
 
             citiesAndAddres = adr.map(item_ => {
-              if (!item.addres.includes(item_) && item_ !== undefined && item_ !== 'null') {
+              if (!item.addres.includes(item_) && item_ !== undefined) {
                 update = true;
                 item.addres.push(item_);
               }
@@ -140,6 +140,7 @@ employeeRecords: {
           } else {
             console.log('cities list not update');
           }
+
         }
 
         return formtDateEmpl(res);
@@ -165,12 +166,23 @@ let questions;
 // let quu = [];
 
 // citiesAndAddres.map(item => {
-//   item;
+//   item.city.map(city => {
+//     item.addres.map(addres => {
+//       typesOfPosts.map(post => {
+//         indictors.map(indic => {
+//           quu.push({
+//             "Город": "",
+//             "Тип должности": "",
+//             "Дополнительный рабочий адрес": "",
+//             "Показатель": "",
+//           });
+//         });
+//       });
+//     });
+//   });
 // });
 
 questions: {
-
-
 
   let questionsRanges = [
     "СПН!C:F",
@@ -179,8 +191,6 @@ questions: {
     // 'МОА!C:F',
     // 'АУП!C:F',
   ];
-
-
 
   questions = Promise
     .all(
@@ -193,6 +203,7 @@ questions: {
       return tableToObject(res);
     })
     .then((res) => {
+      console.log(addPropQu(res));
       return addPropQu(res);
     });
 }
