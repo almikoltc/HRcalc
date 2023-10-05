@@ -61,10 +61,11 @@ import formtDateEmpl from "./components/employeeRecords/formatData.js";
 import addingPropertiesEmpl from "./components/employeeRecords/addProp.js";
 import getSheetNames from "./components/getSheetsName.js";
 
-
 let employeeRecords;
+let citiesAndAddres;
 
 employeeRecords: {
+
   let sheetNames = await getSheetNames(client, "10V1MBl_gMi6oQGeWCY83TWXFcBoIa1Cl4pdpNNiYWyM");
 
   let arrDataRange = sheetNames.map(item => {
@@ -91,47 +92,56 @@ employeeRecords: {
     )
     .then(
       (res) => {
-        uniqueCitisNames: {
+
+        uniqueCitisNamesandAddres: {
 
           let thisIterationCities = [...new Set(res.body.map(item => { return item["Город"]; }))];
           let newCitiesName = [];
+          let update = false;
+
+          /* проверка списка городов */
+
+          let curCity = cities.map(item => {
+            return item.city;
+          });
 
           thisIterationCities.map(item => {
-            if (!cities.includes(item)) {
-              newCitiesName.push(item);
-              console.log(item);
+            if (!curCity.includes(item)) {
+              update = true;
+              newCitiesName.push({ city: item, addres: [] });
             }
           });
 
-          if (newCitiesName.length > 0) {
-            fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify([...cities, ...newCitiesName]));
+          let resArr = [...cities, ...newCitiesName];
+
+          /* проверка полноты адресов */
+
+          resArr.forEach(item => {
+
+            let adr = res.body.map(item_ => {
+              if (item_['Город'] === item.city) {
+                return item_['Дополнительный рабочий адрес'];
+              }
+            });
+
+            adr = [...new Set(adr)];
+
+            citiesAndAddres = adr.map(item_ => {
+              if (!item.addres.includes(item_) && item_ !== undefined && item_ !== 'null') {
+                update = true;
+                item.addres.push(item_);
+              }
+            });
+          });
+
+          if (update) {
+            fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify(resArr));
             console.log('update cities list');
           } else {
             console.log('cities list not update');
           }
-
         }
-        uniqueCitisAdress: {
 
-          let thisIterationCitiesAdress = [...new Set(res.body.map(item => { return item["Город"]; }))];
-          let newCitiesAdress = [];
-
-          thisIterationCities.map(item => {
-            if (!cities.includes(item)) {
-              newCitiesName.push(item);
-              console.log(item);
-            }
-          });
-
-          if (newCitiesName.length > 0) {
-            fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify([...cities, ...newCitiesName]));
-            // cities = [...cities, ...newCitiesName];
-            console.log('update cities list');
-          } else {
-            console.log('cities list not update');
-          }
-
-        }
         return formtDateEmpl(res);
       }
     );

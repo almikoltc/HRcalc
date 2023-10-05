@@ -8,7 +8,7 @@ export default async function objectsPlus(arr, obj) {
 
   head: {
     arr.head = arr.head.concat([
-      // 'Период расчета',
+      'Период расчета',
       'Стаж работы в месяцах',
       'Стаж работы в днях',
       'Был активен',
@@ -43,7 +43,7 @@ export default async function objectsPlus(arr, obj) {
         }
       }
 
-      // item['Период расчета'] = obj.periodStart;
+      item['Период расчета'] = obj.periodStart;
       item['Стаж работы в месяцах'] = dateDiffM(item['Дата выхода на работу'], item['Дата увольнения'], obj.monthEnd);
       item['Стаж работы в днях'] = dateDiffD(item['Дата выхода на работу'], item['Дата увольнения'], obj.monthEnd);
       item['Был активен'] = beActive(item['Дата выхода на работу'], item["Дата увольнения"], obj);
