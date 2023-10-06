@@ -135,8 +135,7 @@ employeeRecords: {
 
           });
 
-          console.log(resArr);
-
+          /* обновление списка уникальных пар город - адрес */
 
           if (update) {
             fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify(resArr));
@@ -145,15 +144,15 @@ employeeRecords: {
             console.log('cities list not update');
           }
 
-          let quu = [];
+          let allQuestionsHead = [];
 
-          questionsHead: {
+          allQuestionsHead: {
 
             resArr.forEach(item => {
               item.addres.forEach(addres => {
                 typesOfPosts.forEach(post => {
                   indictors.forEach(indicator => {
-                    quu.push({
+                    allQuestionsHead.push({
                       "Город": item.city,
                       "Дополнительный рабочий адрес": addres,
                       "Тип должности": post,
@@ -165,8 +164,6 @@ employeeRecords: {
             });
 
             // fs.writeFileSync('./components/catalogs/quu.json', JSON.stringify(quu));
-
-            console.log(quu.length);
           }
         }
 
@@ -211,7 +208,7 @@ questions: {
       return tableToObject(res);
     })
     .then((res) => {
-      // console.log(addPropQu(res));
+      console.log(addPropQu(res));
       return addPropQu(res);
     });
 }
