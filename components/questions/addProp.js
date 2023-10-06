@@ -1,6 +1,6 @@
 export default function (arr) {
 
-  return arr.body.map(el => {
+  return arr.map((el, i) => {
     return Object.assign(el, newOptions[el['Показатель']]);
   });
 }

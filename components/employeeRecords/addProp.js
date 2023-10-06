@@ -1,11 +1,5 @@
 export default async function objectsPlus(arr, obj) {
 
-  let
-    length = arr.body.length,
-    progres = 0.00,
-    progresIOld = 0,
-    progresINew = 0;
-
   head: {
     arr.head = arr.head.concat([
       'Период расчета',
@@ -29,19 +23,6 @@ export default async function objectsPlus(arr, obj) {
     });
 
     function addProp(item, i) {
-      progres: {
-        if (((i + 1) / length).toFixed(2) > progres) {
-          progres = ((i + 1) / length).toFixed(2);
-          progresIOld = progresINew + 1;
-          progresINew = i + 1;
-          console.log(
-            (progres * 100).toFixed(0)
-            + '% --> +'
-            + (progresINew - progresIOld)
-            + ' (' + i + ') addingProperties'
-          );
-        }
-      }
 
       item['Период расчета'] = obj.periodStart;
       item['Стаж работы в месяцах'] = dateDiffM(item['Дата выхода на работу'], item['Дата увольнения'], obj.monthEnd);

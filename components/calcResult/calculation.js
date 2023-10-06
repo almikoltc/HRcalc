@@ -26,8 +26,8 @@ export default function calculation(arrQuery, arrObjects) {
 
     calc: {
 
-      let
-        result = arrObjects.body;
+      let result = arrObjects.body;
+
       for (let key in elQ) {
         result = filter(key, elQ[key], result);
       }

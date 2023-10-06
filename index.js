@@ -61,6 +61,7 @@ import formtDateEmpl from "./components/employeeRecords/formatData.js";
 import addingPropertiesEmpl from "./components/employeeRecords/addProp.js";
 import getSheetNames from "./components/getSheetsName.js";
 
+let dataEmployeeRecords;
 let employeeRecords;
 let citiesAndAddres;
 
@@ -72,7 +73,7 @@ employeeRecords: {
     return item + '!A2:Z';
   });
 
-  employeeRecords = Promise
+  dataEmployeeRecords = Promise
     .all(
       arrDataRange.map((dataRange, iter, thatArr) => {
         return getDataEmpl(client, dataRange);
@@ -89,84 +90,12 @@ employeeRecords: {
       (res) => {
         return tableToObject(res);
       }
-    )
+    );
+
+  employeeRecords = dataEmployeeRecords
     .then(
       (res) => {
-
-        uniqueCitisNamesandAddres: {
-
-          let thisIterationCities = [...new Set(res.body.map(item => { return item["Город"]; }))];
-          let newCitiesName = [];
-          let update = false;
-
-          /* проверка списка городов */
-
-          let curCity = cities.map(item => {
-            return item.city;
-          });
-
-          thisIterationCities.map(item => {
-            if (!curCity.includes(item)) {
-              update = true;
-              newCitiesName.push({ city: item, addres: [] });
-            }
-          });
-
-          let resArr = [...cities, ...newCitiesName];
-
-          /* проверка полноты адресов */
-
-          resArr.forEach(item => {
-
-            let adr = res.body.map(item_ => {
-              if (item_['Город'] === item.city) {
-                return item_['Дополнительный рабочий адрес'];
-              }
-            });
-
-            adr = [...new Set(adr)];
-
-            adr.map(item_ => {
-              if (!item.addres.includes(item_) && item_ !== undefined) {
-                update = true;
-                item.addres.push(item_);
-              }
-            });
-
-          });
-
-          /* обновление списка уникальных пар город - адрес */
-
-          if (update) {
-            fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify(resArr));
-            console.log('update cities list');
-          } else {
-            console.log('cities list not update');
-          }
-
-          let allQuestionsHead = [];
-
-          allQuestionsHead: {
-
-            resArr.forEach(item => {
-              item.addres.forEach(addres => {
-                typesOfPosts.forEach(post => {
-                  indictors.forEach(indicator => {
-                    allQuestionsHead.push({
-                      "Город": item.city,
-                      "Дополнительный рабочий адрес": addres,
-                      "Тип должности": post,
-                      "Показатель": indicator
-                    });
-                  });
-                });
-              });
-            });
-
-            // fs.writeFileSync('./components/catalogs/quu.json', JSON.stringify(quu));
-          }
-        }
-
+        // console.log(formtDateEmpl(res));
         return formtDateEmpl(res);
       }
     );
@@ -189,28 +118,113 @@ let questions;
 
 questions: {
 
-  let questionsRanges = [
-    "СПН!C:F",
-    // 'МОП!C:F',
-    // 'СОА!C:F',
-    // 'МОА!C:F',
-    // 'АУП!C:F',
-  ];
+  // let questionsRanges = [
+  //   "СПН!C:F",
+  //   // 'МОП!C:F',
+  //   // 'СОА!C:F',
+  //   // 'МОА!C:F',
+  //   // 'АУП!C:F',
+  // ];
 
-  questions = Promise
-    .all(
-      questionsRanges.map((questionRange) => {
-        return getDataQu(client, questionRange);
-      })
-    )
+  questions = dataEmployeeRecords
     .then((res) => {
-      res = res.flat();
-      return tableToObject(res);
-    })
-    .then((res) => {
-      console.log(addPropQu(res));
+
+      console.log(1);
+
+      uniqueCitisNamesandAddres: {
+
+        let thisIterationCities = [...new Set(res.body.map(item => { return item["Город"]; }))];
+        let newCitiesName = [];
+        let update = false;
+
+        /* проверка списка городов */
+
+        let curCity = cities.map(item => {
+          return item.city;
+        });
+
+        thisIterationCities.map(item => {
+          if (!curCity.includes(item)) {
+            update = true;
+            newCitiesName.push({ city: item, addres: [] });
+          }
+        });
+
+        let resArr = [...cities, ...newCitiesName];
+
+        /* проверка полноты адресов */
+
+        resArr.forEach(item => {
+
+          let adr = res.body.map(item_ => {
+            if (item_['Город'] === item.city) {
+              return item_['Дополнительный рабочий адрес'];
+            }
+          });
+
+          adr = [...new Set(adr)];
+
+          adr.map(item_ => {
+            if (!item.addres.includes(item_) && item_ !== undefined) {
+              update = true;
+              item.addres.push(item_);
+            }
+          });
+
+        });
+
+        /* обновление списка уникальных пар город - адрес */
+
+        if (update) {
+          fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify(resArr));
+          console.log('update cities list');
+        } else {
+          console.log('cities list not update');
+        }
+
+        let allQuestionsHead = [];
+
+        allQuestionsHead: {
+
+          resArr.forEach(item => {
+            item.addres.forEach(addres => {
+              typesOfPosts.forEach(post => {
+                indictors.forEach(indicator => {
+                  allQuestionsHead.push({
+                    "Город": item.city,
+                    "Дополнительный рабочий адрес": addres,
+                    "Тип должности": post,
+                    "Показатель": indicator
+                  });
+                });
+              });
+            });
+          });
+
+          // fs.writeFileSync('./components/catalogs/allQuestionsHead.json', JSON.stringify(allQuestionsHead));
+        }
+        console.log(allQuestionsHead.length);
+        return allQuestionsHead;
+      }
+    }).then((res) => {
       return addPropQu(res);
     });
+
+  // questions = Promise
+  //   .all(
+  //     questionsRanges.map((questionRange) => {
+  //       return getDataQu(client, questionRange);
+  //     })
+  //   )
+  //   .then((res) => {
+  //     res = res.flat();
+  //     // console.log(tableToObject(res));
+  //     return tableToObject(res);
+  //   })
+  //   .then((res) => {
+  //     // console.log(addPropQu(res));
+  //     return addPropQu(res);
+  //   });
 }
 
 /* calcResult */
