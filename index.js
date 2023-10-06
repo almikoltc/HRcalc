@@ -132,6 +132,26 @@ employeeRecords: {
                 item.addres.push(item_);
               }
             });
+
+            let quu = [];
+
+            citiesAndAddres.forEach(item => {
+              item.addres.forEach(addres => {
+                typesOfPosts.forEach(post => {
+                  indictors.forEach(indicator => {
+                    quu.push({
+                      "Город": item.city,
+                      "Дополнительный рабочий адрес": addres,
+                      "Тип": post,
+                      "Вид": indicator
+                    });
+                  });
+                });
+              });
+            });
+
+            console.log(quu);
+
           });
 
           if (update) {
@@ -162,25 +182,6 @@ import getDataQu from './components/questions/getData.js';
 import addPropQu from "./components/questions/addProp.js";
 
 let questions;
-
-// let quu = [];
-
-// citiesAndAddres.map(item => {
-//   item.city.map(city => {
-//     item.addres.map(addres => {
-//       typesOfPosts.map(post => {
-//         indictors.map(indic => {
-//           quu.push({
-//             "Город": "",
-//             "Тип должности": "",
-//             "Дополнительный рабочий адрес": "",
-//             "Показатель": "",
-//           });
-//         });
-//       });
-//     });
-//   });
-// });
 
 questions: {
 
