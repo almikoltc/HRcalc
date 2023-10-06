@@ -126,33 +126,17 @@ employeeRecords: {
 
             adr = [...new Set(adr)];
 
-            citiesAndAddres = adr.map(item_ => {
+            adr.map(item_ => {
               if (!item.addres.includes(item_) && item_ !== undefined) {
                 update = true;
                 item.addres.push(item_);
               }
             });
 
-            let quu = [];
-
-            citiesAndAddres.forEach(item => {
-              item.addres.forEach(addres => {
-                typesOfPosts.forEach(post => {
-                  indictors.forEach(indicator => {
-                    quu.push({
-                      "Город": item.city,
-                      "Дополнительный рабочий адрес": addres,
-                      "Тип": post,
-                      "Вид": indicator
-                    });
-                  });
-                });
-              });
-            });
-
-            console.log(quu);
-
           });
+
+          console.log(resArr);
+
 
           if (update) {
             fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify(resArr));
@@ -161,6 +145,29 @@ employeeRecords: {
             console.log('cities list not update');
           }
 
+          let quu = [];
+
+          questionsHead: {
+
+            resArr.forEach(item => {
+              item.addres.forEach(addres => {
+                typesOfPosts.forEach(post => {
+                  indictors.forEach(indicator => {
+                    quu.push({
+                      "Город": item.city,
+                      "Дополнительный рабочий адрес": addres,
+                      "Тип должности": post,
+                      "Показатель": indicator
+                    });
+                  });
+                });
+              });
+            });
+
+            // fs.writeFileSync('./components/catalogs/quu.json', JSON.stringify(quu));
+
+            console.log(quu.length);
+          }
         }
 
         return formtDateEmpl(res);
@@ -204,7 +211,7 @@ questions: {
       return tableToObject(res);
     })
     .then((res) => {
-      console.log(addPropQu(res));
+      // console.log(addPropQu(res));
       return addPropQu(res);
     });
 }
