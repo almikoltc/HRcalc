@@ -26,12 +26,14 @@ export default function calculation(arrQuery, arrObjects) {
 
     calc: {
 
-      let result = arrObjects.body;
+      let result = arrObjects;
 
       for (let key in elQ) {
         result = filter(key, elQ[key], result);
       }
       let res = result.length;
+      // elQ.value = res;
+      // console.log(elQ);
       return [res];
 
     }

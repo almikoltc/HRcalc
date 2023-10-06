@@ -63,7 +63,6 @@ import getSheetNames from "./components/getSheetsName.js";
 
 let dataEmployeeRecords;
 let employeeRecords;
-let citiesAndAddres;
 
 employeeRecords: {
 
@@ -95,7 +94,6 @@ employeeRecords: {
   employeeRecords = dataEmployeeRecords
     .then(
       (res) => {
-        // console.log(formtDateEmpl(res));
         return formtDateEmpl(res);
       }
     );
@@ -208,7 +206,7 @@ let calcResult;
 calculation: {
   calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
     ([aimObject, personalInfo, questions]) => {
-      return calculation(questions, personalInfo);
+      return calculation(questions, personalInfo.body);
     }
   );
 }
