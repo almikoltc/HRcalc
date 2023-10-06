@@ -118,18 +118,8 @@ let questions;
 
 questions: {
 
-  // let questionsRanges = [
-  //   "СПН!C:F",
-  //   // 'МОП!C:F',
-  //   // 'СОА!C:F',
-  //   // 'МОА!C:F',
-  //   // 'АУП!C:F',
-  // ];
-
   questions = dataEmployeeRecords
     .then((res) => {
-
-      console.log(1);
 
       uniqueCitisNamesandAddres: {
 
@@ -200,8 +190,6 @@ questions: {
               });
             });
           });
-
-          // fs.writeFileSync('./components/catalogs/allQuestionsHead.json', JSON.stringify(allQuestionsHead));
         }
         console.log(allQuestionsHead.length);
         return allQuestionsHead;
@@ -209,22 +197,6 @@ questions: {
     }).then((res) => {
       return addPropQu(res);
     });
-
-  // questions = Promise
-  //   .all(
-  //     questionsRanges.map((questionRange) => {
-  //       return getDataQu(client, questionRange);
-  //     })
-  //   )
-  //   .then((res) => {
-  //     res = res.flat();
-  //     // console.log(tableToObject(res));
-  //     return tableToObject(res);
-  //   })
-  //   .then((res) => {
-  //     // console.log(addPropQu(res));
-  //     return addPropQu(res);
-  //   });
 }
 
 /* calcResult */
