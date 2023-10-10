@@ -1,5 +1,21 @@
 export default function calculation(arrQuery, arrObjects) {
 
+  let groupedArr = {};
+
+  arrObjects.map(item => {
+
+    if (groupedArr[item["Город"]] === undefined) {
+      groupedArr[item["Город"]] = {};
+    }
+    if (groupedArr[item["Город"]][item["Тип должности"]] === undefined) {
+      groupedArr[item["Город"]][item["Тип должности"]] = [item];
+    } else {
+      groupedArr[item["Город"]][item["Тип должности"]].push(item);
+    }
+  });
+
+  // console.log(groupedArr);
+
   let
     length = arrQuery.length,
     progres = 0.00,
@@ -25,8 +41,11 @@ export default function calculation(arrQuery, arrObjects) {
     }
 
     calc: {
+      console.log(elQ);
 
-      let result = arrObjects;
+      let result = groupedArr[elQ["Город"]][elQ["Тип должности"]];
+
+      // console.log(result);
 
       for (let key in elQ) {
         result = filter(key, elQ[key], result);
