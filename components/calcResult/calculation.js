@@ -41,11 +41,12 @@ export default function calculation(arrQuery, arrObjects) {
     }
 
     calc: {
-      console.log(elQ);
 
       let result = groupedArr[elQ["Город"]][elQ["Тип должности"]];
 
-      // console.log(result);
+      if (result === undefined) {
+        return [0];
+      }
 
       for (let key in elQ) {
         result = filter(key, elQ[key], result);
