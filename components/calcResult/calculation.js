@@ -3,7 +3,6 @@ export default function calculation(arrQuery, arrObjects) {
   let groupedArr = {};
 
   arrObjects.map(item => {
-
     if (groupedArr[item["Город"]] === undefined) {
       groupedArr[item["Город"]] = {};
     }
@@ -14,31 +13,8 @@ export default function calculation(arrQuery, arrObjects) {
     }
   });
 
-  // console.log(groupedArr);
-
-  let
-    length = arrQuery.length,
-    progres = 0.00,
-    progresIOld = 0,
-    progresINew = 0;
-
 
   return arrQuery.map((elQ, i) => {
-
-    progres: {
-      if (((i + 1) / length).toFixed(2) > progres) {
-        progres = ((i + 1) / length).toFixed(2);
-        progresIOld = progresINew + 1;
-        progresINew = i + 1;
-
-        console.log(
-          (progres * 100).toFixed(0)
-          + '% --> +'
-          + (progresINew - progresIOld)
-          + ' (' + i + ') calculation'
-        );
-      }
-    }
 
     calc: {
 
@@ -54,11 +30,14 @@ export default function calculation(arrQuery, arrObjects) {
       let res = result.length;
       // elQ.value = res;
       // console.log(elQ);
+
       return [res];
 
     }
 
   });
+
+
 };
 
 function filter(key, value, arr) {
