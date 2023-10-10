@@ -1,11 +1,31 @@
-import ProgressBar from 'progress';
+import _progress from 'cli-progress';
 
-var bar = new ProgressBar(':bar :current/:total', { total: 10 });
-var timer = setInterval(function () {
-  bar.tick();
-  if (bar.complete) {
+// EXAMPLE 2 ---------------------------------------------
+console.log('\nExample 2 - Custom configuration');
+
+// create new progress bar using default values
+const b2 = new _progress.Bar({
+  barCompleteChar: '*',
+  barIncompleteChar: '-',
+  format: 'Current Upload Progress: [{bar}] {percentage}%',
+  fps: 15,
+  // stream: process.stdout,
+  barsize: 40
+});
+
+b2.start(500, 0);
+
+// 50ms update rate
+const timer = setInterval(function () {
+  // increment value
+  b2.increment();
+
+  // set limit
+  if (b2.value >= b2.getTotal()) {
+    // stop timer
     clearInterval(timer);
-  } else if (bar.curr === 5) {
-    bar.interrupt('this message appears above the progress bar\ncurrent progress is ' + bar.curr + '/' + bar.total);
+
+    b2.stop();
+
   }
-}, 1000);
+}, 50);

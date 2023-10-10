@@ -1,20 +1,38 @@
+import _progress from 'cli-progress';
+
 export default function calculation(arrQuery, arrObjects) {
 
   let groupedArr = {};
 
-  arrObjects.map(item => {
-    if (groupedArr[item["Город"]] === undefined) {
-      groupedArr[item["Город"]] = {};
-    }
-    if (groupedArr[item["Город"]][item["Тип должности"]] === undefined) {
-      groupedArr[item["Город"]][item["Тип должности"]] = [item];
-    } else {
-      groupedArr[item["Город"]][item["Тип должности"]].push(item);
-    }
+  groupedArr: {
+    arrObjects.map(item => {
+      if (groupedArr[item["Город"]] === undefined) {
+        groupedArr[item["Город"]] = {};
+      }
+      if (groupedArr[item["Город"]][item["Тип должности"]] === undefined) {
+        groupedArr[item["Город"]][item["Тип должности"]] = [item];
+      } else {
+        groupedArr[item["Город"]][item["Тип должности"]].push(item);
+      }
+    });
+  }
+
+  const pb = new _progress.Bar({
+    barCompleteChar: '█',
+    barIncompleteChar: '-',
+    format: 'Расчёт значений: {bar} {percentage}%',
+    fps: 15,
+    // stream: process.stdout,
+    barsize: 30
   });
 
+  pb.start(arrQuery.length, 0);
 
   return arrQuery.map((elQ, i) => {
+
+    pb.update(i + i);
+
+    arrQuery.length === i + 1 ? pb.stop() : (1 + 1);
 
     calc: {
 
