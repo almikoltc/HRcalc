@@ -189,7 +189,8 @@ questions: {
             });
           });
         }
-        console.log(allQuestionsHead.length);
+
+        console.log("Кол-во рассчитываемых показателей: " + allQuestionsHead.length);
         return allQuestionsHead;
       }
     }).then((res) => {
