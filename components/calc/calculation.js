@@ -6,6 +6,9 @@ export default function calculation(arrQuery, arrObjects) {
 
   groupedArr: {
     arrObjects.map(item => {
+
+      item["Дополнительный рабочий адрес"] === "null" ? item["Дополнительный рабочий адрес"] = null : item;
+
       if (groupedArr[item["Город"]] === undefined) {
         groupedArr[item["Город"]] = {};
       }
@@ -19,10 +22,10 @@ export default function calculation(arrQuery, arrObjects) {
 
   const pb = new _progress.Bar({
     barCompleteChar: '█',
-    barIncompleteChar: '-',
+    barIncompleteChar: '|',
     format: 'Расчёт значений: {bar} {percentage}%',
-    fps: 15,
-    // stream: process.stdout,
+    fps: 5,
+    stream: process.stdout,
     barsize: 30
   });
 
@@ -32,27 +35,37 @@ export default function calculation(arrQuery, arrObjects) {
 
     pb.update(i + i);
 
-    arrQuery.length === i + 1 ? pb.stop() : (1 + 1);
+    arrQuery.length === i + 1 ? pb.stop() : true;
 
     calc: {
 
       let result = groupedArr[elQ["Город"]][elQ["Тип должности"]];
 
       if (result === undefined) {
-        return [0];
+        return {
+          city: elQ["Город"],
+          addres: elQ["Дополнительный рабочий адрес"],
+          post: elQ["Тип должности"],
+          indicator: elQ["Показатель"],
+          value: 0,
+        };
       }
 
       for (let key in elQ) {
         result = filter(key, elQ[key], result);
       }
+
       let res = result.length;
-      // elQ.value = res;
-      // console.log(elQ);
 
-      return [res];
-
+      return {
+        city: elQ["Город"],
+        addres: elQ["Дополнительный рабочий адрес"],
+        post: elQ["Тип должности"],
+        indicator: elQ["Показатель"],
+        value: res,
+      };
+      // return [res];
     }
-
   });
 
 

@@ -1,19 +1,17 @@
-console.log('app running');
-
-/* global import */
+/* зависимости общего назначения */
 
 import { google } from "googleapis";
 import fs from "fs";
 import objectToTable from './components/objectToTable.js';
 import tableToObject from './components/tableToObject.js';
 
-/* catalogs */
+/* каталоги */
 
 import cities from "./components/catalogs/cities.json" assert { type: 'json' };
 import typesOfPosts from "./components/catalogs/typesOfPosts.json" assert { type: 'json' };
 import indictors from "./components/catalogs/indictors.json" assert { type: 'json' };
 
-/* autorization */
+/* авторизация */
 
 import keys from "./components/keys.json" assert { type: 'json' };
 
@@ -33,7 +31,7 @@ client: {
   });
 }
 
-/* aim */
+/* указание периода расчёта */
 
 import getDataAim from './components/aimObject/getData.js';
 import getAim from './components/aimObject/createAimObject.js';
@@ -45,7 +43,7 @@ aimObject: {
     .then((data) => {
       return getAim({
         year: 2023 /* Ввод */,
-        month: 9 /* Ввод */,
+        month: 10 /* Ввод */,
         data: data /* Ввод */,
       });
     })
@@ -54,7 +52,7 @@ aimObject: {
     });
 }
 
-/* employeeRecords */
+/* данные по сотрудникам */
 
 import getDataEmpl from './components/employeeRecords/getData.js';
 import formtDateEmpl from "./components/employeeRecords/formatData.js";
@@ -75,26 +73,24 @@ employeeRecords: {
   dataEmployeeRecords = Promise
     .all(
       arrDataRange.map((dataRange, iter, thatArr) => {
-        return getDataEmpl(client, dataRange);
+        return getDataEmpl(client, dataRange); /* получение массива из таблиц */
       })
-    )
-    .then(
+    ).then(
       (arr = result.falt()) => {
         return arr.reduce((acc, item, iter, thatArr) => {
-          return acc.concat(item);
+          return acc.concat(item);  /* объединение в единый массив */
         }, []);
       }
-    )
-    .then(
+    ).then(
       (res) => {
-        return tableToObject(res);
+        return tableToObject(res); /* формирование из строк объектов */
       }
     );
 
   employeeRecords = dataEmployeeRecords
     .then(
       (res) => {
-        return formtDateEmpl(res);
+        return formtDateEmpl(res); /* форматирование значений */
       }
     );
 
@@ -102,12 +98,12 @@ employeeRecords: {
     .all([employeeRecords, aimObject])
     .then(
       ([employeeRecords, aimObject]) => {
-        return addingPropertiesEmpl(employeeRecords, aimObject);
+        return addingPropertiesEmpl(employeeRecords, aimObject); /* расчёт и добавления новых свойст для фильтрации */
       }
     );
 }
 
-/* questions */
+/* формирование списка показателей */
 
 import getDataQu from './components/questions/getData.js';
 import addPropQu from "./components/questions/addProp.js";
@@ -125,7 +121,7 @@ questions: {
         let newCitiesName = [];
         let update = false;
 
-        /* проверка списка городов */
+        /* Формирование списка городов */
 
         let curCity = cities.map(item => {
           return item.city;
@@ -140,7 +136,7 @@ questions: {
 
         let resArr = [...cities, ...newCitiesName];
 
-        /* проверка полноты адресов */
+        /* формирование дополнительных адресов по каждому городу */
 
         resArr.forEach(item => {
 
@@ -161,7 +157,7 @@ questions: {
 
         });
 
-        /* обновление списка уникальных пар город - адрес */
+        /* обновление списка городов и адресов, если втретились изменения  */
 
         if (update) {
           fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify(resArr));
@@ -170,12 +166,15 @@ questions: {
           console.log('cities list not update');
         }
 
+        /* формирование перечня показателей: город х адрес х тип долности */
+
         let allQuestionsHead = [];
 
         allQuestionsHead: {
 
           resArr.forEach(item => {
             item.addres.forEach(addres => {
+              if (addres === 'null' || addres === null) { addres = ""; }
               typesOfPosts.forEach(post => {
                 indictors.forEach(indicator => {
                   allQuestionsHead.push({
@@ -191,25 +190,33 @@ questions: {
         }
 
         console.log("Кол-во рассчитываемых показателей: " + allQuestionsHead.length);
+
         return allQuestionsHead;
       }
     }).then((res) => {
-      return addPropQu(res);
+      console.log(res
+        .filter(item => {
+          return item['Дополнительный рабочий адрес'] === '';
+        })
+      );
+      return addPropQu(res); /* добавление дополнительных свойств для перечня показателей */
     });
 }
 
-/* calcResult */
+/* вычисление значения показателей */
 
-import calculation from "./components/calcResult/calculation.js";
+import calculation from "./components/calc/calculation.js";
 
 let calcResult;
 
 calculation: {
   calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
     ([aimObject, personalInfo, questions]) => {
-      return calculation(questions, personalInfo.body);
+      return calculation(questions, personalInfo.body); /* вычисление */
     }
   );
 }
 
-console.dir(calcResult);
+console.dir(calcResult.filter(item => {
+  return item.city === "Тюмень" && item.addres === '' && item.post === "Специалист отдела продаж";
+}));
