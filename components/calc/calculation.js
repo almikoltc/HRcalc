@@ -1,34 +1,30 @@
 import _progress from 'cli-progress';
+import fs from "fs";
 export default function calculation(arrQuery, arrObjects) {
    let groupedArr = {};
    groupedArr: {
       arrObjects.map(item => {
-         // item["Дополнительный рабочий адрес"] === "null" ? item["Дополнительный рабочий адрес"] = null : item;
          if (groupedArr[item["Город"]] === undefined) {
-            groupedArr[item["Город"]] = {};
+            groupedArr[item["Город"]] = [];
          }
-         if (groupedArr[item["Город"]][item["Тип должности"]] === undefined) {
-            groupedArr[item["Город"]][item["Тип должности"]] = [item];
-         } else {
-            groupedArr[item["Город"]][item["Тип должности"]].push(item);
-         }
-      });
+         groupedArr[item["Город"]].push(item);
+      }
+      );
    }
-   // console.log(groupedArr["Тюмень"]);
    const pb = new _progress.Bar({
       barCompleteChar: '█',
       barIncompleteChar: '|',
       format: 'Расчёт значений: {bar} {percentage}%',
-      fps: 5,
+      fps: 10,
       stream: process.stdout,
-      barsize: 30
+      barsize: 20
    });
    pb.start(arrQuery.length, 0);
    return arrQuery.map((elQ, i) => {
       pb.update(i + i);
       arrQuery.length === i + 1 ? pb.stop() : true;
       calc: {
-         let result = groupedArr[elQ["Город"]][elQ["Тип должности"]];
+         let result = groupedArr[elQ["Город"]];
          if (result === undefined) {
             return {
                city: elQ["Город"],
@@ -49,12 +45,12 @@ export default function calculation(arrQuery, arrObjects) {
             indicator: elQ["Показатель"],
             value: res,
          };
-         // return [res];
       }
    });
 };
+/* блок функций */
 function filter(key, value, arr) {
-   if (value === null || value === "" || key === 'Показатель') {
+   if (value === null || key === "Показатель") {
       return arr;
    }
    return arr.filter(el => {

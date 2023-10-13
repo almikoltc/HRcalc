@@ -52,39 +52,25 @@ employeeRecords: {
       return item + '!A2:Z';
    });
    dataEmployeeRecords = Promise
-      .all(
-         arrDataRange.map((dataRange, iter, thatArr) => {
-            return getDataEmpl(client, dataRange); /* получение массива из таблиц */
-         })
-      ).then(
-         (arr = result.falt()) => {
-            return arr.reduce((acc, item, iter, thatArr) => {
-               return acc.concat(item);  /* объединение в единый массив */
-            }, []);
-         }
-      ).then(
-         (res) => {
-            return tableToObject(res); /* формирование из строк объектов */
-         }
-      );
+      .all(arrDataRange.map((dataRange, iter, thatArr) => {
+         return getDataEmpl(client, dataRange); /* получение массива из таблиц */
+      })
+      ).then((arr = result.falt()) => {
+         return arr.reduce((acc, item, iter, thatArr) => {
+            return acc.concat(item);  /* объединение в единый массив */
+         }, []);
+      }).then((res) => {
+         return tableToObject(res); /* формирование из строк объектов */
+      });
    employeeRecords = dataEmployeeRecords
-      .then(
-         (res) => {
-            return formtDateEmpl(res); /* форматирование значений */
-         }
-      );
+      .then((res) => {
+         return formtDateEmpl(res); /* форматирование значений */
+      });
    employeeRecords = Promise
       .all([employeeRecords, aimObject])
-      .then(
-         ([employeeRecords, aimObject]) => {
-            return addingPropertiesEmpl(employeeRecords, aimObject); /* расчёт и добавления новых свойст для фильтрации */
-         }
-      );
-   // .then((res) => {
-
-   //    console.log(res);
-   //    console.log("-------------");
-   // });
+      .then(([employeeRecords, aimObject]) => {
+         return addingPropertiesEmpl(employeeRecords, aimObject); /* расчёт и добавления новых свойст для фильтрации */
+      });
 }
 /* формирование списка показателей */
 import getDataQu from './components/questions/getData.js';
@@ -135,12 +121,12 @@ questions: {
             allQuestionsHead: {
                resArr.forEach(item => {
                   item.addres.forEach(addres => {
-                     if (addres === 'null' || addres === null) { addres = ""; }
+                     // if (addres === 'null' || addres === null) { addres = ""; }
                      typesOfPosts.forEach(post => {
                         indictors.forEach(indicator => {
                            allQuestionsHead.push({
                               "Город": item.city,
-                              "Дополнительный рабочий адрес": addres,
+                              "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
                               "Тип должности": post,
                               "Показатель": indicator
                            });
@@ -162,11 +148,10 @@ let calcResult;
 calculation: {
    calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
       ([aimObject, employeeRecords, questions]) => {
-         console.log(questions);
          return calculation(questions, employeeRecords.body); /* вычисление */
       }
    );
 }
-// console.dir(calcResult.filter(item => {
-//    return item.city === "Тюмень" && item.addres === '' && item.post === "Специалист отдела продаж";
-// }));
+console.log(calcResult.filter(item => {
+   return item.city === "Тюмень" && item.post === "Специалист отдела продаж";
+}));
