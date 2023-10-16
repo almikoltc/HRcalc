@@ -31,9 +31,11 @@ uniqId/* .slice(0, 100) */.map((item, i) => {
    pb.update(i + 1);
    uniqId.length === i + 1 ? pb.stop() : true;
    // console.log(item);
-   obj[`${item}`] = arr.filter(_item => {
-      return _item.id == item;
-   }).sort((a, b) => { return new Date(a.period).getTime() - new Date(b.period).getTime(); });
+   obj[`${item}`] = arr
+      .filter(_item => {
+         return _item.id == item;
+      })
+      .sort((a, b) => { return new Date(a.period).getTime() - new Date(b.period).getTime(); });
 });
 pb.stop();
 fs.writeFileSync('./ОбъединениеСрезов.json', JSON.stringify(obj));
