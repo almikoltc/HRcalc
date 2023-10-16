@@ -14,14 +14,14 @@ export default function calculation(arrQuery, arrObjects) {
    const pb = new _progress.Bar({
       barCompleteChar: '█',
       barIncompleteChar: '|',
-      format: 'Расчёт значений: {bar} {percentage}%',
+      format: 'Расчёт значений: {bar} {percentage}% ({duration} sec.)',
       fps: 10,
       stream: process.stdout,
       barsize: 20
    });
    pb.start(arrQuery.length, 0);
    return arrQuery.map((elQ, i) => {
-      pb.update(i + i);
+      pb.update(i + 1);
       arrQuery.length === i + 1 ? pb.stop() : true;
       calc: {
          let result = groupedArr[elQ["Город"]];

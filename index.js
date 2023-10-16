@@ -3,6 +3,7 @@ import { google } from "googleapis";
 import fs from "fs";
 import objectToTable from './components/func/objectToTable.js';
 import tableToObject from './components/func/tableToObject.js';
+import _progress from 'cli-progress';
 /* каталоги */
 import cities from "./components/catalogs/cities.json" assert { type: 'json' };
 import typesOfPosts from "./components/catalogs/typesOfPosts.json" assert { type: 'json' };
@@ -23,10 +24,10 @@ client: {
    });
 }
 /* указание периода расчёта */
-import getDataAim from './components/aimObject/getData.js';
-import getAim from './components/aimObject/createAimObject.js';
+import getDataAim from './components/period/getData.js';
+import getAim from './components/period/createAimObject.js';
 let aimObject;
-aimObject: {
+period: {
    aimObject = getDataAim(client, "СПН!A1:XX1")
       .then((data) => {
          return getAim({
@@ -54,13 +55,24 @@ employeeRecords: {
    dataEmployeeRecords = Promise
       .all(arrDataRange.map((dataRange, iter, thatArr) => {
          return getDataEmpl(client, dataRange); /* получение массива из таблиц */
-      })
-      ).then((arr = result.falt()) => {
+      }))
+      .then((arr = result.falt()) => {
          return arr.reduce((acc, item, iter, thatArr) => {
             return acc.concat(item);  /* объединение в единый массив */
          }, []);
-      }).then((res) => {
-         return tableToObject(res); /* формирование из строк объектов */
+      })
+      .then((res) => {
+         let q;
+         q = tableToObject(res); /* формирование из строк объектов */
+         // fs.writeFileSync('./сентябрь.json', JSON.stringify(q.body.map(item => {
+         //    return {
+         //       period: new Date(2023, 9 - 1, 1, 5, 0, 0, 0),
+         //       id: item["Код сотрудника"],
+         //       zero: item["Группа 0 (Да/Нет)"],
+         //       priority: item["Статус приоритет"],
+         //    };
+         // })));
+         return q;
       });
    employeeRecords = dataEmployeeRecords
       .then((res) => {
@@ -73,7 +85,7 @@ employeeRecords: {
       });
 }
 /* формирование списка показателей */
-import getDataQu from './components/questions/getData.js';
+// import getDataQu from './components/questions/getData.js';
 import addPropQu from "./components/questions/addProp.js";
 let questions;
 questions: {
@@ -109,19 +121,11 @@ questions: {
                   }
                });
             });
-            /* обновление списка городов и адресов, если втретились изменения  */
-            /* if (update) {
-              fs.writeFileSync('./components/catalogs/cities.json', JSON.stringify(resArr));
-              console.log('update cities list');
-            } else {
-              console.log('cities list not update');
-            } */
             /* формирование перечня показателей: город х адрес х тип долности */
             let allQuestionsHead = [];
             allQuestionsHead: {
                resArr.forEach(item => {
                   item.addres.forEach(addres => {
-                     // if (addres === 'null' || addres === null) { addres = ""; }
                      typesOfPosts.forEach(post => {
                         indictors.forEach(indicator => {
                            allQuestionsHead.push({
@@ -138,7 +142,8 @@ questions: {
             console.log("Кол-во рассчитываемых показателей: " + allQuestionsHead.length);
             return allQuestionsHead;
          }
-      }).then((res) => {
+      })
+      .then((res) => {
          return addPropQu(res); /* добавление дополнительных свойств для перечня показателей */
       });
 }
@@ -152,6 +157,6 @@ calculation: {
       }
    );
 }
-console.log(calcResult.filter(item => {
-   return item.city === "Тюмень" && item.post === "Специалист отдела продаж";
-}));
+// console.log(calcResult.filter(item => {
+//    return item.city === "Тюмень" && item.post === "Специалист отдела продаж";
+// }));
