@@ -15,11 +15,12 @@ client: {
    client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
       "https://www.googleapis.com/auth/spreadsheets",
    ]);
-   client.authorize((err, tokens) => {
+   client.authorize((err, tokens) =>
+   {
       if (err) {
-         console.log("Err!");
+         console.log("Ошибка авторизации");
       } else {
-         console.log("Connect");
+         console.log("Авторизация завершена");
       }
    });
 }
@@ -29,14 +30,16 @@ import getAim from './components/period/createAimObject.js';
 let aimObject;
 period: {
    aimObject = getDataAim(client, "СПН!A1:XX1")
-      .then((data) => {
+      .then((data) =>
+      {
          return getAim({
             year: 2023 /* Ввод */,
             month: 10 /* Ввод */,
             data: data /* Ввод */,
          });
       })
-      .then((data) => {
+      .then((data) =>
+      {
          return data;
       });
 }
@@ -49,19 +52,24 @@ let dataEmployeeRecords;
 let employeeRecords;
 employeeRecords: {
    let sheetNames = await getSheetNames(client, "10V1MBl_gMi6oQGeWCY83TWXFcBoIa1Cl4pdpNNiYWyM");
-   let arrDataRange = sheetNames.map(item => {
+   let arrDataRange = sheetNames.map(item =>
+   {
       return item + '!A2:Z';
    });
    dataEmployeeRecords = Promise
-      .all(arrDataRange.map((dataRange, iter, thatArr) => {
+      .all(arrDataRange.map((dataRange, iter, thatArr) =>
+      {
          return getDataEmpl(client, dataRange); /* получение массива из таблиц */
       }))
-      .then((arr = result.falt()) => {
-         return arr.reduce((acc, item, iter, thatArr) => {
+      .then((arr = result.falt()) =>
+      {
+         return arr.reduce((acc, item, iter, thatArr) =>
+         {
             return acc.concat(item);  /* объединение в единый массив */
          }, []);
       })
-      .then((res) => {
+      .then((res) =>
+      {
          let q;
          q = tableToObject(res); /* формирование из строк объектов */
          // fs.writeFileSync('./сентябрь.json', JSON.stringify(q.body.map(item => {
@@ -72,15 +80,18 @@ employeeRecords: {
          //       priority: item["Статус приоритет"],
          //    };
          // })));
+         console.log(1);
          return q;
       });
    employeeRecords = dataEmployeeRecords
-      .then((res) => {
+      .then((res) =>
+      {
          return formtDateEmpl(res); /* форматирование значений */
       });
    employeeRecords = Promise
       .all([employeeRecords, aimObject])
-      .then(([employeeRecords, aimObject]) => {
+      .then(([employeeRecords, aimObject]) =>
+      {
          return addingPropertiesEmpl(employeeRecords, aimObject); /* расчёт и добавления новых свойст для фильтрации */
       });
 }
@@ -90,16 +101,19 @@ import addPropQu from "./components/questions/addProp.js";
 let questions;
 questions: {
    questions = dataEmployeeRecords
-      .then((res) => {
+      .then((res) =>
+      {
          uniqueCitisNamesandAddres: {
             let thisIterationCities = [...new Set(res.body.map(item => { return item["Город"]; }))];
             let newCitiesName = [];
             let update = false;
             /* Формирование списка городов */
-            let curCity = cities.map(item => {
+            let curCity = cities.map(item =>
+            {
                return item.city;
             });
-            thisIterationCities.map(item => {
+            thisIterationCities.map(item =>
+            {
                if (!curCity.includes(item)) {
                   update = true;
                   newCitiesName.push({ city: item, addres: [] });
@@ -107,14 +121,17 @@ questions: {
             });
             let resArr = [...cities, ...newCitiesName];
             /* формирование дополнительных адресов по каждому городу */
-            resArr.forEach(item => {
-               let adr = res.body.map(item_ => {
+            resArr.forEach(item =>
+            {
+               let adr = res.body.map(item_ =>
+               {
                   if (item_['Город'] === item.city) {
                      return item_['Дополнительный рабочий адрес'];
                   }
                });
                adr = [...new Set(adr)];
-               adr.map(item_ => {
+               adr.map(item_ =>
+               {
                   if (!item.addres.includes(item_) && item_ !== undefined) {
                      update = true;
                      item.addres.push(item_);
@@ -124,10 +141,14 @@ questions: {
             /* формирование перечня показателей: город х адрес х тип долности */
             let allQuestionsHead = [];
             allQuestionsHead: {
-               resArr.forEach(item => {
-                  item.addres.forEach(addres => {
-                     typesOfPosts.forEach(post => {
-                        indictors.forEach(indicator => {
+               resArr.forEach(item =>
+               {
+                  item.addres.forEach(addres =>
+                  {
+                     typesOfPosts.forEach(post =>
+                     {
+                        indictors.forEach(indicator =>
+                        {
                            allQuestionsHead.push({
                               "Город": item.city,
                               "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
@@ -143,7 +164,8 @@ questions: {
             return allQuestionsHead;
          }
       })
-      .then((res) => {
+      .then((res) =>
+      {
          return addPropQu(res); /* добавление дополнительных свойств для перечня показателей */
       });
 }
@@ -152,7 +174,8 @@ import calculation from "./components/calc/calculation.js";
 let calcResult;
 calculation: {
    calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
-      ([aimObject, employeeRecords, questions]) => {
+      ([aimObject, employeeRecords, questions]) =>
+      {
          return calculation(questions, employeeRecords.body); /* вычисление */
       }
    );
