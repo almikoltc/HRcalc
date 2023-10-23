@@ -4,6 +4,7 @@ import fs from "fs";
 import objectToTable from './components/func/objectToTable.js';
 import tableToObject from './components/func/tableToObject.js';
 import _progress from 'cli-progress';
+import htmlTableResult from "./components/func/htmlTableResult.js";
 /* каталоги */
 import cities from "./components/catalogs/cities.json" assert { type: 'json' };
 import typesOfPosts from "./components/catalogs/typesOfPosts.json" assert { type: 'json' };
@@ -55,7 +56,7 @@ employeeRecords: {
   let sheetNames = await getSheetNames(client, "1Tgfh3utS2njkqLzST91Ys_szmLNRJGXh3SZbCQcrIqY");
   let arrDataRange = sheetNames.map(item =>
   {
-    return item + '!A2:Z';
+    return item + '!A2:N';
   });
   dataEmployeeRecords = Promise
     .all(arrDataRange.map((dataRange, iter, thatArr) =>
@@ -176,17 +177,17 @@ calculation: {
   calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
     ([aimObject, employeeRecords, questions]) =>
     {
+      // htmlTableResult(employeeRecords.body);
       return calculation(questions, employeeRecords.body); /* вычисление */
     }
   );
 }
 /* html таблица */
-import htmlTableResult from "./components/func/htmlTableResult.js";
 
 htmlTable: {
-  htmlTableResult(calcResult);
+  htmlTableResult(calcResult.filter(item =>
+  {
+    return item.city === "Тюмень" && item.post === "Специалист отдела продаж" && item.addres === null;
+  }));
   console.log('Server start...');
 }
-// console.log(calcResult.filter(item => {
-//    return item.city === "Тюмень" && item.post === "Специалист отдела продаж";
-// }));
