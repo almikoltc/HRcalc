@@ -24,11 +24,11 @@ export default async function htmlResult(arr)
   <html lang="en">
     <head>
       <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="viewport" content="width=80wh, initial-scale=1.0">
       <title>HRcalc</title>
     </head>
     <body>
-      <table>
+      <table cellspacing="2" border="1" cellpadding="5" width="900">
         <tbody>
           ${tableContent /* = null *//*  = "<h2> e12312312</h2>" */}
         </tbody >
