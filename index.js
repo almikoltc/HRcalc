@@ -30,19 +30,10 @@ import getDataAim from './components/period/getData.js';
 import getAim from './components/period/createAimObject.js';
 let aimObject;
 period: {
-  aimObject = getDataAim(client, "СПН!A1:XX1")
-    .then((data) =>
-    {
-      return getAim({
-        year: 2023 /* Ввод */,
-        month: 10 /* Ввод */,
-        data: data /* Ввод */,
-      });
-    })
-    .then((data) =>
-    {
-      return data;
-    });
+  aimObject = getAim({
+    year: 2023 /* Ввод */,
+    month: 10 /* Ввод */,
+  });
 }
 /* данные по сотрудникам */
 import getDataEmpl from './components/employeeRecords/getData.js';
@@ -72,17 +63,7 @@ employeeRecords: {
     })
     .then((res) =>
     {
-      let q;
-      q = tableToObject(res); /* формирование из строк объектов */
-      // fs.writeFileSync('./сентябрь.json', JSON.stringify(q.body.map(item => {
-      //    return {
-      //       period: new Date(2023, 9 - 1, 1, 5, 0, 0, 0),
-      //       id: item["Код сотрудника"],
-      //       zero: item["Группа 0 (Да/Нет)"],
-      //       priority: item["Статус приоритет"],
-      //    };
-      // })));
-      return q;
+      return tableToObject(res); /* формирование из строк объектов */
     });
   employeeRecords = dataEmployeeRecords
     .then((res) =>
@@ -150,11 +131,16 @@ questions: {
               {
                 indictors.forEach(indicator =>
                 {
-                  allQuestionsHead.push({
-                    "Город": item.city,
-                    "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
-                    "Тип должности": post,
-                    "Показатель": indicator
+
+                  [null, '1-2023', '2-2023', '3-2023', '4-2023', '5-2023', '6-2023', '7-2023', '8-2023', '9-2023', '10-2023', '11-2023', '12-2023'].forEach(monthGroup =>
+                  {
+                    allQuestionsHead.push({
+                      "Город": item.city,
+                      "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
+                      "Тип должности": post,
+                      "Показатель": indicator,
+                      "Месяц найма": monthGroup
+                    });
                   });
                 });
               });
@@ -162,6 +148,7 @@ questions: {
           });
         }
         console.log("Сalculated values: " + allQuestionsHead.length);
+        // htmlTableResult(allQuestionsHead);
         return allQuestionsHead;
       }
     })
@@ -177,13 +164,12 @@ calculation: {
   calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
     ([aimObject, employeeRecords, questions]) =>
     {
-      // htmlTableResult(employeeRecords.body);
+      // htmlTableResult(employeeRecords.body.slice(0, 1000));
       return calculation(questions, employeeRecords.body); /* вычисление */
     }
   );
 }
 /* html таблица */
-
 htmlTable: {
   htmlTableResult(calcResult.filter(item =>
   {
