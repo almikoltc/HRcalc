@@ -43,8 +43,8 @@ function monthGroup(date)
   if (!date || date === 'null') {
     return "Ошибка: нет даты выхода на работу!";
   }
-  return `${date.getMonth()}-${date.getFullYear()}`;
-  return new Date(date.getFullYear(), date.getMonth(), 1, 5, 0, 0, 0).getTime();
+  // return `${date.getMonth()}-${date.getFullYear()}`;
+  return new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0).toDateString();
 }
 function hiredFail(leave, workDays)
 {
