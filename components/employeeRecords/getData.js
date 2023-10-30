@@ -1,10 +1,10 @@
 import { google } from "googleapis";
 
-export default async function (client, range)
+export default async function (client, idSheet, range)
 {
 
   const opt = {
-    spreadsheetId: ["1Tgfh3utS2njkqLzST91Ys_szmLNRJGXh3SZbCQcrIqY"], /*  */
+    spreadsheetId: [idSheet], /*  */
     // spreadsheetId: ["10V1MBl_gMi6oQGeWCY83TWXFcBoIa1Cl4pdpNNiYWyM"], /* Текущий */
     range: [range],
     valueRenderOption: "UNFORMATTED_VALUE",

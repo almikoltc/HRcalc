@@ -1,4 +1,4 @@
-export default async function (obj)
+export default function (obj)
 {
 
   /* TODO Убрать ручную корректировку часового пояса */
@@ -8,6 +8,7 @@ export default async function (obj)
     periodStart: new Date(obj.year, obj.month - 1, 1, 5, 0, 0, 0),
     periodEnd: new Date(obj.year, obj.month, 1, 5, 0, 0, 0),
     monthEnd: new Date(obj.year, obj.month, 0, 5, 0, 0, 0),
+    sheetID: obj.id
     // col: 0
   };
 

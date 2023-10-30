@@ -1,6 +1,6 @@
 import _progress from 'cli-progress';
 import fs from "fs";
-export default function calculation(arrQuery, arrObjects)
+export default function calculation(arrQuery, arrObjects, aim)
 {
   let groupedArr = {};
   groupedArr: {
@@ -9,15 +9,19 @@ export default function calculation(arrQuery, arrObjects)
       if (groupedArr[item["Город"]] === undefined) {
         groupedArr[item["Город"]] = [];
       }
-      groupedArr[item["Город"]].push(item);
+      if (groupedArr[item["Город"]][item["Тип должности"]] === undefined) {
+        groupedArr[item["Город"]][item["Тип должности"]] = [];
+      }
+
+      groupedArr[item["Город"]][item["Тип должности"]].push(item);
     }
     );
   }
   const pb = new _progress.Bar({
     barCompleteChar: '█',
     barIncompleteChar: '|',
-    format: 'Расчёт значений: {bar} {percentage}% ({duration} sec.)',
-    fps: 10,
+    format: 'Расчёт значений: {bar} ▪ {value}/{total} ▪ {percentage}% ▪ ({duration} sec.)',
+    fps: 24,
     stream: process.stdout,
     barsize: 20
   });
@@ -27,7 +31,7 @@ export default function calculation(arrQuery, arrObjects)
     pb.update(i + 1);
     arrQuery.length === i + 1 ? pb.stop() : true;
     calc: {
-      let result = groupedArr[elQ["Город"]];
+      let result = groupedArr[elQ["Город"]][elQ["Тип должности"]];
       if (result === undefined) {
         return {
           city: elQ["Город"],
@@ -35,6 +39,7 @@ export default function calculation(arrQuery, arrObjects)
           addres: elQ["Дополнительный рабочий адрес"],
           post: elQ["Тип должности"],
           indicator: elQ["Показатель"],
+          calcDate: aim,
           value: 0,
         };
       }
@@ -48,6 +53,7 @@ export default function calculation(arrQuery, arrObjects)
         addres: elQ["Дополнительный рабочий адрес"],
         post: elQ["Тип должности"],
         indicator: elQ["Показатель"],
+        calcDate: aim,
         value: res,
       };
     }
