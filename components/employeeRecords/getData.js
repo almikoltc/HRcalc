@@ -20,6 +20,8 @@ export default async function (client, idSheet, range)
 
   let rawData = answer.data.values;
 
+  console.log(range + " - done");
+
   return rawData;
 
 }

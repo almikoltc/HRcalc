@@ -19,19 +19,17 @@ const aimObject = getAim({
 /* авторизация */
 import keys from "./components/keys.json" assert { type: 'json' };
 let client;
-client: {
-  client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
-    "https://www.googleapis.com/auth/spreadsheets",
-  ]);
-  client.authorize((err, tokens) =>
-  {
-    if (err) {
-      console.log("Authorization err");
-    } else {
-      console.log("Authorization OK");
-    }
-  });
-}
+client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
+  "https://www.googleapis.com/auth/spreadsheets",
+]);
+client.authorize((err, tokens) =>
+{
+  if (err) {
+    console.log("Authorization err");
+  } else {
+    console.log("Authorization OK");
+  }
+});
 
 /* данные по сотрудникам */
 import getDataEmpl from './components/employeeRecords/getData.js';
