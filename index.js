@@ -14,7 +14,7 @@ import getAim from './components/period/createAimObject.js';
 const aimObject = getAim({
 /* insert */  year: 2023,
 /* insert */  month: 10,
-/* insert */  id: '10V1MBl_gMi6oQGeWCY83TWXFcBoIa1Cl4pdpNNiYWyM',
+/* insert */  id: '1rjaA3msOpY4Q9K2cap4KMvYRqGXRCUuD1fMeyqe12EQ',
 });
 /* авторизация */
 import keys from "./components/keys.json" assert { type: 'json' };
@@ -110,12 +110,11 @@ questions: {
       });
       /* формирование перечня показателей: город х адрес х тип долности */
       let allQuestionsHead = [];
-      /*  */
-      let techArr = [null];
-      [...new Array(12).keys()].map((itm, i) =>
-      {
-        techArr.push(new Date(2023, i, 1).toDateString());
-      });
+      // let techArr = [null];
+      // [...new Array(12).keys()].map((itm, i) =>
+      // {
+      //   techArr.push(new Date(2023, i, 1).toDateString());
+      // });
       resArr.forEach(item =>
       {
         item.addres.forEach(addres =>
@@ -124,16 +123,17 @@ questions: {
           {
             indictors.forEach(indicator =>
             {
-              techArr.forEach(monthGroup =>
-              {
-                allQuestionsHead.push({
-                  "Город": item.city,
-                  "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
-                  "Тип должности": post,
-                  "Показатель": indicator,
-                  "Месяц найма": monthGroup,
-                });
-              });
+              // techArr.forEach(monthGroup =>
+              // {
+              let currItem = {
+                "Город": item.city,
+                "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
+                "Тип должности": post,
+                "Показатель": indicator,
+                // "Месяц найма": monthGroup
+              };
+              allQuestionsHead.push(currItem);
+              // });
             });
           });
         });
@@ -149,6 +149,7 @@ questions: {
 }
 /* вычисление значения показателей */
 import calculation from "./components/calc/calculation.js";
+import { json } from "express";
 let calcResult;
 calculation: {
   calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
