@@ -10,7 +10,6 @@ import htmlTableResult from "./components/func/htmlTableResult.js";
 /*
 Каталоги
  */
-// import cities from "./components/catalogs/cities.json" assert { type: 'json' };
 import typesOfPosts from "./components/catalogs/typesOfPosts.json" assert { type: 'json' };
 import indictors from "./components/catalogs/indictors.js";
 /*
@@ -48,6 +47,8 @@ import getSheetNames from "./components/func/getSheetsName.js";
  */
 const sheetNames = await getSheetNames(client, aimObject.sheetID);
 let arrDataRange = sheetNames.map(item => { return item + '!A2:N'; });
+/*
+ */
 let dataEmployeeRecords = Promise
   .all(arrDataRange.map((dataRange, iter, thatArr) => {
     /* получение массива из таблиц */
@@ -70,6 +71,8 @@ let employeeRecords = dataEmployeeRecords
     /* форматирование значений */
     return formtDateEmpl(res);
   });
+/*
+ */
 employeeRecords = Promise
   .all([employeeRecords, aimObject])
   .then(([employeeRecords, aimObject]) => {
@@ -109,16 +112,20 @@ let questions = dataEmployeeRecords
     Формирование перечня показателей: город * адрес * тип долности * показатель
      */
     let allQuestionsHead = [];
-    let periodArr = [null];
     /* месяца групп найма */
+    let periodArr = [null];
     [...new Array(12).keys()].map((itm, i) => {
       periodArr.push(new Date(2023, i, 1).toDateString());
     });
+    /*
+     */
+    let li;
     newCitiesName.forEach(item => { /* город */
       item.addres.forEach(addres => { /* адрес */
         typesOfPosts.forEach(post => { /* тип должности */
           indictors.forEach(indicator => { /* вид показателя */
             periodArr.forEach(monthGroup => { /* группа найма */
+              li = currItem ? JSON.stringify(currItem) : '';
               let currItem = {
                 "Город": item.city,
                 "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
@@ -126,18 +133,21 @@ let questions = dataEmployeeRecords
                 "Показатель": indicator,
                 "Месяц найма": monthGroup
               };
-              allQuestionsHead.push(currItem);
+              if (currItem === li) {
+                allQuestionsHead.push(currItem);
+              }
             });
           });
         });
       });
     });
+    newCitiesName = null;
     console.log("Сalculated values: " + allQuestionsHead.length);
-    // htmlTableResult(allQuestionsHead);
     return allQuestionsHead;
   })
   .then((res) => {
-    return addPropQu(res); /* добавление дополнительных свойств для перечня показателей */
+    /* добавление дополнительных свойств */
+    return addPropQu(res);
   });
 // }
 /*
