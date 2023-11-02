@@ -11,15 +11,14 @@ import htmlTableResult from "./components/func/htmlTableResult.js";
 Каталоги
  */
 import typesOfPosts from "./components/catalogs/typesOfPosts.json" assert { type: 'json' };
-import indictors from "./components/catalogs/indictors.js";
 /*
 Указание периода расчёта
- */
+*/
 import getAim from './components/period/createAimObject.js';
 const aimObject = getAim({
-/* insert */  year: 2023,
-/* insert */  month: 10,
-/* insert */  id: '1rjaA3msOpY4Q9K2cap4KMvYRqGXRCUuD1fMeyqe12EQ',
+  /* insert */  year: 2023,
+  /* insert */  month: 10,
+  /* insert */  id: '1rjaA3msOpY4Q9K2cap4KMvYRqGXRCUuD1fMeyqe12EQ',
 });
 /*
 Aвторизация
@@ -38,17 +37,17 @@ client.authorize((err, tokens) => {
 });
 /*
 Данные по сотрудникам
- */
+*/
 import getDataEmpl from './components/employeeRecords/getData.js';
 import formtDateEmpl from "./components/employeeRecords/formatData.js";
 import addingPropertiesEmpl from "./components/employeeRecords/addProp.js";
 import getSheetNames from "./components/func/getSheetsName.js";
 /*
- */
+*/
 const sheetNames = await getSheetNames(client, aimObject.sheetID);
 let arrDataRange = sheetNames.map(item => { return item + '!A2:N'; });
 /*
- */
+*/
 let dataEmployeeRecords = Promise
   .all(arrDataRange.map((dataRange, iter, thatArr) => {
     /* получение массива из таблиц */
@@ -65,14 +64,14 @@ let dataEmployeeRecords = Promise
     return tableToObject(res);
   });
 /*
- */
+*/
 let employeeRecords = dataEmployeeRecords
   .then((res) => {
     /* форматирование значений */
     return formtDateEmpl(res);
   });
 /*
- */
+*/
 employeeRecords = Promise
   .all([employeeRecords, aimObject])
   .then(([employeeRecords, aimObject]) => {
@@ -81,21 +80,23 @@ employeeRecords = Promise
   });
 /*
 Формирование списка показателей
- */
+*/
+import indictorsBase from "./components/catalogs/indictorsBase.js";
+import indictorsPerMon from "./components/catalogs/indictorsPerMon.js";
 import addPropQu from "./components/questions/addProp.js";
 let questions = dataEmployeeRecords
   .then((res) => {
     /*
     Формирование списка городов
-     */
-    let newCitiesName = [...new Set(res.body.map(item => { return item["Город"]; }))]
+    */
+    let citiesName = [...new Set(res.body.map(item => { return item["Город"]; }))]
       .map(item => {
         return { city: item, addres: [] };
       });
     /*
     Формирование дополнительных адресов по каждому городу
     */
-    newCitiesName.forEach(item => {
+    citiesName.forEach(item => {
       let adr = res.body.map(item_ => {
         if (item_['Город'] === item.city) {
           return item_['Дополнительный рабочий адрес'];
@@ -118,14 +119,13 @@ let questions = dataEmployeeRecords
       periodArr.push(new Date(2023, i, 1).toDateString());
     });
     /*
-     */
-    let li;
-    newCitiesName.forEach(item => { /* город */
+    */
+    // /* с аналитикой по группе найма */
+    citiesName.forEach(item => { /* город */
       item.addres.forEach(addres => { /* адрес */
         typesOfPosts.forEach(post => { /* тип должности */
-          indictors.forEach(indicator => { /* вид показателя */
+          indictorsPerMon.forEach(indicator => { /* вид показателя */
             periodArr.forEach(monthGroup => { /* группа найма */
-              li = currItem ? JSON.stringify(currItem) : '';
               let currItem = {
                 "Город": item.city,
                 "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
@@ -133,15 +133,33 @@ let questions = dataEmployeeRecords
                 "Показатель": indicator,
                 "Месяц найма": monthGroup
               };
-              if (currItem === li) {
-                allQuestionsHead.push(currItem);
-              }
+              allQuestionsHead.push(currItem);
             });
           });
         });
       });
     });
-    newCitiesName = null;
+    /* без аналитике по группе найма */
+    citiesName.forEach(item => { /* город */
+      item.addres.forEach(addres => { /* адрес */
+        typesOfPosts.forEach(post => { /* тип должности */
+          indictorsBase.forEach(indicator => { /* вид показателя */
+            // periodArr.forEach(monthGroup => { /* группа найма */
+            let currItem = {
+              "Город": item.city,
+              "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
+              "Тип должности": post,
+              "Показатель": indicator,
+              // "Месяц найма": monthGroup
+            };
+            allQuestionsHead.push(currItem);
+          });
+          // });
+        });
+      });
+    });
+
+    citiesName = null;
     console.log("Сalculated values: " + allQuestionsHead.length);
     return allQuestionsHead;
   })
@@ -156,12 +174,13 @@ let questions = dataEmployeeRecords
 import calculation from "./components/calc/calculation.js";
 let calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
   ([aimObject, employeeRecords, questions]) => {
-    return calculation(questions, employeeRecords.body, aimObject.inputDate.toDateString()); /* вычисление */
+    /* вычисление */
+    return calculation(questions, employeeRecords.body, aimObject.inputDate.toDateString());
   }
 );
 /*
 Вывод результата
-*/
+ */
 htmlTableResult(calcResult.filter(item => {
   return item.city === "Тюмень" && item.post === "Специалист отдела продаж" && item.addres === null;
 }));
