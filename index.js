@@ -1,6 +1,6 @@
 /*
 Зависимости общего назначения
- */
+*/
 import { google } from "googleapis";
 import fs from "fs";
 import objectToTable from './components/func/objectToTable.js';
@@ -9,7 +9,7 @@ import _progress from 'cli-progress';
 import htmlTableResult from "./components/func/htmlTableResult.js";
 /*
 Каталоги
- */
+*/
 import typesOfPosts from "./components/catalogs/typesOfPosts.json" assert { type: 'json' };
 /*
 Указание периода расчёта
@@ -17,12 +17,12 @@ import typesOfPosts from "./components/catalogs/typesOfPosts.json" assert { type
 import getAim from './components/period/createAimObject.js';
 const aimObject = getAim({
   /* insert */  year: 2023,
-  /* insert */  month: 10,
+  /* insert */  month: 11,
   /* insert */  id: '1rjaA3msOpY4Q9K2cap4KMvYRqGXRCUuD1fMeyqe12EQ',
 });
 /*
 Aвторизация
- */
+*/
 import keys from "./components/keys.json" assert { type: 'json' };
 let client;
 client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
@@ -111,7 +111,7 @@ let questions = dataEmployeeRecords
     });
     /*
     Формирование перечня показателей: город * адрес * тип долности * показатель
-     */
+    */
     let allQuestionsHead = [];
     /* месяца групп найма */
     let periodArr = [null];
@@ -120,7 +120,7 @@ let questions = dataEmployeeRecords
     });
     /*
     */
-    // /* с аналитикой по группе найма */
+    /* с аналитикой по группе найма */
     citiesName.forEach(item => { /* город */
       item.addres.forEach(addres => { /* адрес */
         typesOfPosts.forEach(post => { /* тип должности */
@@ -158,7 +158,6 @@ let questions = dataEmployeeRecords
         });
       });
     });
-
     citiesName = null;
     console.log("Сalculated values: " + allQuestionsHead.length);
     return allQuestionsHead;
@@ -170,7 +169,7 @@ let questions = dataEmployeeRecords
 // }
 /*
 Вычисление значения показателей
- */
+*/
 import calculation from "./components/calc/calculation.js";
 let calcResult = await Promise.all([aimObject, employeeRecords, questions]).then(
   ([aimObject, employeeRecords, questions]) => {
@@ -180,7 +179,7 @@ let calcResult = await Promise.all([aimObject, employeeRecords, questions]).then
 );
 /*
 Вывод результата
- */
+*/
 htmlTableResult(calcResult.filter(item => {
   return item.city === "Тюмень" && item.post === "Специалист отдела продаж" && item.addres === null;
 }));
