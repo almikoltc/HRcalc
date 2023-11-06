@@ -19,22 +19,13 @@ const aimObject = getAim({
   /* insert */  year: 2023,
   /* insert */  month: 11,
   /* insert */  id: '1rjaA3msOpY4Q9K2cap4KMvYRqGXRCUuD1fMeyqe12EQ',
+  /* insert */  range: '!A2:N',
 });
 /*
 Aвторизация
 */
-import keys from "./components/keys.json" assert { type: 'json' };
-let client;
-client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
-  "https://www.googleapis.com/auth/spreadsheets",
-]);
-client.authorize((err, tokens) => {
-  if (err) {
-    console.log("Authorization err");
-  } else {
-    console.log("Authorization OK");
-  }
-});
+import authorization from "./components/authorization.js";
+let client = authorization();
 /*
 Данные по сотрудникам
 */
@@ -45,7 +36,7 @@ import getSheetNames from "./components/func/getSheetsName.js";
 /*
 */
 const sheetNames = await getSheetNames(client, aimObject.sheetID);
-let arrDataRange = sheetNames.map(item => { return item + '!A2:N'; });
+let arrDataRange = sheetNames.map(item => { return item + aimObject.sheetRange; });
 /*
 */
 let dataEmployeeRecords = Promise
@@ -78,6 +69,8 @@ employeeRecords = Promise
     /* добавления новых свойст для фильтрации */
     return addingPropertiesEmpl(employeeRecords, aimObject);
   });
+
+console.log(employeeRecords);
 /*
 Формирование списка показателей
 */
