@@ -1,10 +1,10 @@
 /*
 Зависимости общего назначения
 */
-import { google } from "googleapis";
-import fs from "fs";
-import objectToTable from './components/func/objectToTable.js';
-import tableToObject from './components/func/tableToObject.js';
+// import { google } from "googleapis";
+// import fs from "fs";
+// import objectToTable from './components/func/objectToTable.js';
+// import tableToObject from './components/func/tableToObject.js';
 import _progress from 'cli-progress';
 import htmlTableResult from "./components/func/htmlTableResult.js";
 /*
@@ -14,7 +14,7 @@ import getAim from './components/period/createAimObject.js';
 const aimObject = getAim({
   /* insert */  year: 2023,
   /* insert */  month: 11,
-  /* insert */  id: '1rjaA3msOpY4Q9K2cap4KMvYRqGXRCUuD1fMeyqe12EQ',
+  /* insert */  id: '10V1MBl_gMi6oQGeWCY83TWXFcBoIa1Cl4pdpNNiYWyM',
   /* insert */  range: '!A2:N',
 });
 /*
@@ -37,7 +37,7 @@ const employeeRecords = Promise
     return addPropertiesEmpl(employeeRecordsData, aimObject);
   });
 /*
-Формирование списка показателей
+Формирование списка показателей для расчета
 */
 import questionsFunc from './components/indicators/_index.js';
 let questions = questionsFunc(employeeRecords);
@@ -57,5 +57,5 @@ let calcResult = await Promise.all([aimObject, employeeRecords, questions]).then
 htmlTableResult(calcResult.filter(item => {
   return item.city === "Тюмень" && item.post === "Специалист отдела продаж" && item.addres === null;
 }));
-// fs.writeFileSync("./Result.json", JSON.stringify(calcResult));
 console.log('Server start...');
+// fs.writeFileSync("./Result.json", JSON.stringify(calcResult));
