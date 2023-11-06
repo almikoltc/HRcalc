@@ -39,7 +39,7 @@ const sheetNames = await getSheetNames(client, aimObject.sheetID);
 let arrDataRange = sheetNames.map(item => { return item + aimObject.sheetRange; });
 /*
 */
-let dataEmployeeRecords = Promise
+let employeeRecords = Promise
   .all(arrDataRange.map((dataRange, iter, thatArr) => {
     /* получение массива из таблиц */
     return getDataEmpl(client, aimObject.sheetID, dataRange);
@@ -53,10 +53,10 @@ let dataEmployeeRecords = Promise
   .then((res) => {
     /* формирование из строк объектов */
     return tableToObject(res);
-  });
-/*
-*/
-let employeeRecords = dataEmployeeRecords
+  })
+  // /*
+  // */
+  // let employeeRecords = dataEmployeeRecords
   .then((res) => {
     /* форматирование значений */
     return formtDateEmpl(res);
