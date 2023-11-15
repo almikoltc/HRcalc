@@ -1,10 +1,9 @@
 /*
-Зависимости общего назначения
+Вспомогательные зависимости
 */
-// import { google } from "googleapis";
-// import fs from "fs";
-// import objectToTable from './components/func/objectToTable.js';
-// import tableToObject from './components/func/tableToObject.js';
+import fs from "fs";
+import objectToTable from './components/func/objectToTable.js';
+import tableToObject from './components/func/tableToObject.js';
 import _progress from 'cli-progress';
 import htmlTableResult from "./components/func/htmlTableResult.js";
 /*
