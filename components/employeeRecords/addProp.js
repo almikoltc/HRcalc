@@ -1,5 +1,4 @@
-export default async function objectsPlus(arr, obj)
-{
+export default async function objectsPlus(arr, obj) {
   head: {
     arr.head = arr.head.concat([
       'Период расчета',
@@ -16,12 +15,10 @@ export default async function objectsPlus(arr, obj)
     ]);
   }
   body: {
-    arr.body = arr.body/* .slice(0, 1000) */.map((item, i) =>
-    {
+    arr.body = arr.body/* .slice(0, 1000) */.map((item, i) => {
       return addProp(item, i);
     });
-    function addProp(item, i)
-    {
+    function addProp(item, i) {
       item['Период расчета'] = obj.periodStart;
       item['Стаж работы в месяцах'] = dateDiffM(item['Дата выхода на работу'], item['Дата увольнения'], obj.monthEnd);
       item['Стаж работы в днях'] = dateDiffD(item['Дата выхода на работу'], item['Дата увольнения'], obj.monthEnd);
@@ -38,20 +35,17 @@ export default async function objectsPlus(arr, obj)
   }
   return arr;
 };
-function monthGroup(date)
-{
+function monthGroup(date) {
   if (!date || date === 'null') {
     return "Ошибка: нет даты выхода на работу!";
   }
   // return `${date.getMonth()}-${date.getFullYear()}`;
   return new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0).toDateString();
 }
-function hiredFail(leave, workDays)
-{
+function hiredFail(leave, workDays) {
   return (leave === true && workDays <= 14);
 }
-function beActive(start, end, obj)
-{
+function beActive(start, end, obj) {
   if (start === '' || start === null) {
     return "Ошибка";
   }
@@ -60,15 +54,13 @@ function beActive(start, end, obj)
   }
   return end >= obj.periodEnd;
 }
-function beHired(start, end, obj)
-{
+function beHired(start, end, obj) {
   if (start === null) {
     return 'Ошибка';
   }
   return start >= obj.periodStart && start < obj.periodEnd;
 }
-function beFired(start, end, obj)
-{
+function beFired(start, end, obj) {
   if (end === '') {
     return 'Ошибка';
   }
@@ -77,8 +69,7 @@ function beFired(start, end, obj)
   }
   return end >= obj.periodStart && end < obj.periodEnd;
 }
-function dateDiffM(start, end, monthEnd)
-{
+function dateDiffM(start, end, monthEnd) {
   if (!start || start === 'null') {
     return "Ошибка: нет даты выхода на работу!";
   }
@@ -93,8 +84,7 @@ function dateDiffM(start, end, monthEnd)
     (end.getMonth() - start.getMonth()) + 1
   );
 }
-function dateDiffD(start, end, monthEnd)
-{
+function dateDiffD(start, end, monthEnd) {
   if (!start || start === 'null') {
     return "Ошибка: нет даты выхода на работу!";
   }
