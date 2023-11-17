@@ -3,7 +3,7 @@ import http from "http";
  */
 const token = 'SmIPyU8QKb';
 const request_body = {
-  hostname: 'http://dc0-prod-bi-external-01.esoft.local',
+  hostname: 'dc0-prod-bi-external-01.esoft.local',
   port: 10022,
   path: '/report/api/v1/requestRawReportData',
   token: token,

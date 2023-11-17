@@ -1,4 +1,5 @@
 export default async function objectsPlus(arr, obj) {
+  const offset = new Date().getTimezoneOffset() * 60000;
   head: {
     arr.head = arr.head.concat([
       'Период расчета',
@@ -15,7 +16,7 @@ export default async function objectsPlus(arr, obj) {
     ]);
   }
   body: {
-    arr.body = arr.body/* .slice(0, 1000) */.map((item, i) => {
+    arr.body = arr.body.map((item, i) => {
       return addProp(item, i);
     });
     function addProp(item, i) {
@@ -35,65 +36,39 @@ export default async function objectsPlus(arr, obj) {
   }
   return arr;
 };
-function monthGroup(date) {
-  if (!date || date === 'null') {
-    return "Ошибка: нет даты выхода на работу!";
-  }
-  // return `${date.getMonth()}-${date.getFullYear()}`;
-  return new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0).toDateString();
+function monthGroup(date) { // группа найма
+  if (!date || date === 'null') { return "Ошибка: нет даты выхода на работу!"; }
+  return new Date(date.getFullYear(), date.getMonth(), 1).toDateString();
 }
-function hiredFail(leave, workDays) {
+const hiredFail = (leave, workDays) => { // ошибка найма?
   return (leave === true && workDays <= 14);
-}
-function beActive(start, end, obj) {
-  if (start === '' || start === null) {
-    return "Ошибка";
-  }
-  if (end === null) {
-    return true;
-  }
+};
+function beActive(start, end, obj) { // был активен (в том месяце)?
+  if (start === '' || start === null) { return "Ошибка"; }
+  if (end === null) { return true; }
   return end >= obj.periodEnd;
 }
-function beHired(start, end, obj) {
-  if (start === null) {
-    return 'Ошибка';
-  }
+function beHired(start, end, obj) { // был нанят (в том месяце)?
+  if (start === null) { return 'Ошибка'; }
   return start >= obj.periodStart && start < obj.periodEnd;
 }
-function beFired(start, end, obj) {
-  if (end === '') {
-    return 'Ошибка';
-  }
-  if (end === null) {
-    return false;
-  }
+function beFired(start, end, obj) { // был уволен (в том месяце)?
+  if (end === '') { return 'Ошибка'; }
+  if (end === null) { return false; }
   return end >= obj.periodStart && end < obj.periodEnd;
 }
 function dateDiffM(start, end, monthEnd) {
-  if (!start || start === 'null') {
-    return "Ошибка: нет даты выхода на работу!";
-  }
-  if (!end || end === 'null') {
-    end = new Date();
-  }
-  if (end.getTime() > monthEnd.getTime()) {
-    end = monthEnd;
-  }
+  if (!start || start === 'null') { return "Ошибка: нет даты выхода на работу!"; }
+  if (!end || end === 'null') { end = new Date(); }
+  if (end.getTime() > monthEnd.getTime()) { end = monthEnd; }
   return (
-    (end.getFullYear() - start.getFullYear()) * 12 +
-    (end.getMonth() - start.getMonth()) + 1
+    (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1
   );
 }
 function dateDiffD(start, end, monthEnd) {
-  if (!start || start === 'null') {
-    return "Ошибка: нет даты выхода на работу!";
-  }
-  if (!end || end === 'null') {
-    end = new Date();
-  }
-  if (end.getTime() > monthEnd.getTime()) {
-    end = monthEnd;
-  }
+  if (!start || start === 'null') { return "Ошибка: нет даты выхода на работу!"; }
+  if (!end || end === 'null') { end = new Date(); }
+  if (end.getTime() > monthEnd.getTime()) { end = monthEnd; }
   return (
     parseInt((end.getTime() - start.getTime()) / (864 * 10 ** 5))
   );
