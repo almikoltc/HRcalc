@@ -1,14 +1,12 @@
-export default function (arr)
-{
-  return arr.map((el, i) =>
-  {
+export default function (arr) {
+  return arr.map((el, i) => {
     return Object.assign(el, newOptions[el['Показатель']]);
   });
 }
 
 let newOptions = { /* если null - фильт пропускает значение */
   'Численность, всего': {
-    'Статус': null,
+    'Статус': 'Активен',
     'Группа 0 (Да/Нет)': null,
     'Статус приоритет': 'Да',
     'Код сотрудника': null,

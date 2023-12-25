@@ -1,25 +1,17 @@
 export default function (obj) {
-
-  /* TODO Убрать ручную корректировку часового пояса */
-
+  const offset = new Date().getTimezoneOffset() / 60;
+  /*
+  */
   let res = {
-    inputDate: new Date(obj.year, obj.month - 1, 1, 5, 0, 0, 0),
-    periodStart: new Date(obj.year, obj.month - 1, 1, 5, 0, 0, 0),
-    periodEnd: new Date(obj.year, obj.month, 1, 5, 0, 0, 0),
-    monthEnd: new Date(obj.year, obj.month, 0, 5, 0, 0, 0),
+    inputDate: new Date(obj.year, obj.month - 1, 1, -offset, 0, 0, 0),
+    periodStart: new Date(obj.year, obj.month - 1, 1, -offset, 0, 0, 0),
+    periodEnd: new Date(obj.year, obj.month, 1, -offset, 0, 0, 0),
+    monthEnd: new Date(obj.year, obj.month, 0, -offset, 0, 0, 0),
     sheetID: obj.id,
     sheetRange: obj.range
     // col: 0
   };
-
-  //  obj.data.flat().forEach((el, i) => {
-  //     let splitArr = el.split('.');
-  //     let serchDate = new Date(splitArr[2], splitArr[1] - 1, splitArr[0], 5, 0, 0, 0);
-  //     if (serchDate.getTime() == res.inputDate.getTime()) {
-  //        res.col = i + 1;
-  //     }
-  //  });
-
-
+  /*
+  */
   return res;
 }

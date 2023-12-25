@@ -29,7 +29,7 @@ export default async function (client, aimObject) {
     })
     .then((res) => {
       let q = formtDateEmpl(res);
-      console.log(q);
+      // console.log(q);
       return q; /* форматирование значений */
     });
 }

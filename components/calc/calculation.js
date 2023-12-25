@@ -1,18 +1,15 @@
 import _progress from 'cli-progress';
 import fs from "fs";
-export default function calculation(arrQuery, arrObjects, aim)
-{
+export default function calculation(arrQuery, arrObjects, aim) {
   let groupedArr = {};
   groupedArr: {
-    arrObjects.map(item =>
-    {
+    arrObjects.map(item => {
       if (groupedArr[item["Город"]] === undefined) {
         groupedArr[item["Город"]] = [];
       }
       if (groupedArr[item["Город"]][item["Тип должности"]] === undefined) {
         groupedArr[item["Город"]][item["Тип должности"]] = [];
       }
-
       groupedArr[item["Город"]][item["Тип должности"]].push(item);
     }
     );
@@ -26,8 +23,7 @@ export default function calculation(arrQuery, arrObjects, aim)
     barsize: 20
   });
   pb.start(arrQuery.length, 0);
-  return arrQuery.map((elQ, i) =>
-  {
+  return arrQuery.map((elQ, i) => {
     pb.update(i + 1);
     arrQuery.length === i + 1 ? pb.stop() : true;
     calc: {
@@ -60,13 +56,11 @@ export default function calculation(arrQuery, arrObjects, aim)
   });
 };
 /* блок функций */
-function filter(key, value, arr)
-{
+function filter(key, value, arr) {
   if (value === null || key === "Показатель") {
     return arr;
   }
-  return arr.filter(el =>
-  {
+  return arr.filter(el => {
     return el[key] === value;
   });
 }

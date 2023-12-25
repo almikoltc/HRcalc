@@ -77,8 +77,8 @@ export default async function (employeeRecords) {
                 // "Месяц найма": monthGroup
               };
               allQuestionsHead.push(currItem);
+              // });
             });
-            // });
           });
         });
       });

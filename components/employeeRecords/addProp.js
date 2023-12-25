@@ -1,5 +1,4 @@
 export default async function objectsPlus(arr, obj) {
-  const offset = new Date().getTimezoneOffset() * 60000;
   head: {
     arr.head = arr.head.concat([
       'Период расчета',
@@ -36,6 +35,9 @@ export default async function objectsPlus(arr, obj) {
   }
   return arr;
 };
+/*
+ */
+const day = 864 * 10 ** 5;
 function monthGroup(date) { // группа найма
   if (!date || date === 'null') { return "Ошибка: нет даты выхода на работу!"; }
   return new Date(date.getFullYear(), date.getMonth(), 1).toDateString();
@@ -70,6 +72,6 @@ function dateDiffD(start, end, monthEnd) {
   if (!end || end === 'null') { end = new Date(); }
   if (end.getTime() > monthEnd.getTime()) { end = monthEnd; }
   return (
-    parseInt((end.getTime() - start.getTime()) / (864 * 10 ** 5))
+    parseInt((end.getTime() - start.getTime()) / day)
   );
 }
