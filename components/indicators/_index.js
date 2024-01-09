@@ -38,31 +38,31 @@ export default async function (employeeRecords) {
       */
       let allQuestionsHead = [];
       /* месяца групп найма */
-      let periodArr = [null];
-      [...new Array(12).keys()].map((itm, i) => {
-        periodArr.push(new Date(2023, i, 1).toDateString());
-      });
+      // let periodArr = [null];
+      // [...new Array(12).keys()].map((itm, i) => {
+      //   periodArr.push(new Date(2023, i, 1).toDateString());
+      // });
       /*
       */
       /* с аналитикой по группе найма */
-      citiesName.forEach(item => { /* город */
-        item.addres.forEach(addres => { /* адрес */
-          typesOfPosts.forEach(post => { /* тип должности */
-            indictorsPerMon.forEach(indicator => { /* вид показателя */
-              periodArr.forEach(monthGroup => { /* группа найма */
-                let currItem = {
-                  "Город": item.city,
-                  "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
-                  "Тип должности": post,
-                  "Показатель": indicator,
-                  "Месяц найма": monthGroup
-                };
-                allQuestionsHead.push(currItem);
-              });
-            });
-          });
-        });
-      });
+      // citiesName.forEach(item => { /* город */
+      //   item.addres.forEach(addres => { /* адрес */
+      //     typesOfPosts.forEach(post => { /* тип должности */
+      //       indictorsPerMon.forEach(indicator => { /* вид показателя */
+      //         periodArr.forEach(monthGroup => { /* группа найма */
+      //           let currItem = {
+      //             "Город": item.city,
+      //             "Дополнительный рабочий адрес": addres === 'null' ? null : addres,
+      //             "Тип должности": post,
+      //             "Показатель": indicator,
+      //             "Месяц найма": monthGroup
+      //           };
+      //           allQuestionsHead.push(currItem);
+      //         });
+      //       });
+      //     });
+      //   });
+      // });
       /* без аналитике по группе найма */
       citiesName.forEach(item => { /* город */
         item.addres.forEach(addres => { /* адрес */

@@ -31,7 +31,7 @@ export default function calculation(arrQuery, arrObjects, aim) {
       if (result === undefined) {
         return {
           city: elQ["Город"],
-          gpoup: elQ["Месяц найма"],
+          // group: elQ["Месяц найма"],
           addres: elQ["Дополнительный рабочий адрес"],
           post: elQ["Тип должности"],
           indicator: elQ["Показатель"],
@@ -45,7 +45,7 @@ export default function calculation(arrQuery, arrObjects, aim) {
       let res = result.length;
       return {
         city: elQ["Город"],
-        gpoup: elQ["Месяц найма"],
+        // group: elQ["Месяц найма"],
         addres: elQ["Дополнительный рабочий адрес"],
         post: elQ["Тип должности"],
         indicator: elQ["Показатель"],

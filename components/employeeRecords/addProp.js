@@ -46,7 +46,7 @@ const hiredFail = (leave, workDays) => { // ошибка найма?
   return (leave === true && workDays <= 14);
 };
 function beActive(start, end, obj) { // был активен (в том месяце)?
-  if (start === '' || start === null) { return "Ошибка"; }
+  if (start === '' || start === null || start >= obj.periodEnd) { return "Ошибка"; }
   if (end === null) { return true; }
   return end >= obj.periodEnd;
 }
